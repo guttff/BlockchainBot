@@ -1,8 +1,8 @@
 <?php
 include 'config/bittrex_properties.php';
-include 'bittrex/bittrex_helper.php';
+include 'Bittrex/bittrex_helper.php';
 include 'Utils/logger.php';
-include 'Algorithm/MarketMaker.php';
+include 'Strategy/MarketMaker.php';
     
     echo '<b>BlockChain Trading Bot</b> <br/><br/><br/>';
     
@@ -12,7 +12,7 @@ include 'Algorithm/MarketMaker.php';
     $marketMaker    = new MarketMaker;
 //     $logger         = new Logger;
     
-    echo $bittrexProp->getBittrexBalanceAll();
+//     echo $bittrexProp->getBittrexBalanceAll();
     
     
     $bittrex_open_order         = $bittrexHelper->getBittrexOpenOrder($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexOpenOrderURL());
