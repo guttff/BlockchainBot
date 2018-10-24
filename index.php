@@ -6,7 +6,7 @@ include 'Algorithm/MarketMaker.php';
     
     echo '<b>BlockChain Trading Bot</b> <br/><br/><br/>';
     
-    
+     
     $bittrexProp    = new BittrexProperties;
     $bittrexHelper  = new BittrexHelper;
     $marketMaker    = new MarketMaker;
