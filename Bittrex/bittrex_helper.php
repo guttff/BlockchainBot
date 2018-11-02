@@ -1,5 +1,8 @@
 <?php
 
+
+// require_once "Bittrex/BittrexTicker.php";
+
 Class BittrexHelper{
     
     function cancelBittrexOrder($apisecret, $bittrex_cancel_order, $ORDER_UUID){
@@ -172,13 +175,17 @@ Class BittrexHelper{
     function getBittrexTicker($bittrex_ticker, $market){
         $nonce=time();
         $bittrex_ticker .= $market . '&nonce=' . $nonce;
-        $tickerData = '';
+        $bt = new BittrexTicker;
         $obj = json_decode(file_get_contents($bittrex_ticker), true);
         
-        if($obj['success'])
+        if($obj['success']){
             $tickerData = $obj['result'];
-        
-        return $tickerData;
+            $bt->setAsk($tickerData['Ask']);
+            $bt->setBid($tickerData['Bid']);
+            $bt->setLast($tickerData['Ask']);
+        }
+           
+        return $bt;
     }
 }
 

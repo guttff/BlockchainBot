@@ -9,7 +9,7 @@ Class MarketMaker{
     }
     
     function getSpreadPercent($bid, $ask, $price){
-        return number_format((($bid - $ask)/$price),4);
+        return number_format((abs($bid - $ask)/$price),4);
     }
 }
 ?>
