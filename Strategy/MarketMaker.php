@@ -19,6 +19,8 @@ Class MarketMaker extends JsonBase{
     private $spreadMin;
     private $spreadMax;
     private $excludeCoins;
+    private $minUSDCost;
+    private $maxUSDCost;
     
     public function expose() {
         return get_object_vars($this);
@@ -31,6 +33,8 @@ Class MarketMaker extends JsonBase{
         $this->spreadMin    = (isset($args['spreadMin']))       ? $args['spreadMin']        : null;
         $this->spreadMax    = (isset($args['spreadMax']))       ? $args['spreadMax']        : null;
         $this->excludeCoins = (isset($args['excludeCoins']))    ? $args['excludeCoins']     : array();
+        $this->minUSDCost   = (isset($args['minUSDCost']))      ? $args['minUSDCost']       : null;
+        $this->maxUSDCost   = (isset($args['maxUSDCost']))      ? $args['maxUSDCost']       : null;
             
     }
     
@@ -44,6 +48,17 @@ Class MarketMaker extends JsonBase{
         echo '$coinMarketCap data: <br/>';
         echo $coinMarketCap->toJSON();
         echo "</pre>";
+        
+        
+        $balance_BTC        = $bittrexHelper->getBittrexBalance($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexBalanceBTCURL());
+        foreach($coinMarketCap->getFgcData() as $data) {
+            $coinMarketCap->setFgcDataQuotes($data['quotes']);
+            $coinMarketCap->setFgcDataQuotesBTC($coinMarketCap->getFgcDataQuotes()['BTC']);
+            $coinMarketCap->setFgcDataQuotesUSD($coinMarketCap->getFgcDataQuotes()['USD']);
+            
+            
+            
+        }
     }
     
     function isUpTrend($marketHistory){

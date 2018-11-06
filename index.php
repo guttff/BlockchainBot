@@ -24,9 +24,11 @@ ini_set('max_execution_time', 300);
     echo '<b>BlockChain Trading Bot</b> <br/><br/><br/>';
     
     
-    $marketMakerBot    = new MarketMaker(Array( 'limit'         => 20,
+    $marketMakerBot    = new MarketMaker(Array( 'limit'         => 100,
                                                 'limitStart'    => 1,
                                                 'aggression'    => 3,
+                                                'minUSDCost'    => 0.000001,
+                                                'maxUSDCost'    => 4,
                                                 'spreadMax'     => 7,
                                                 'spreadMin'     => 7,
                                                 'excludecoins'  => ['USDT', 'TUSD']
