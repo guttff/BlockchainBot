@@ -1,31 +1,53 @@
 <?php
-include 'config/bittrex_properties.php';
-include 'Bittrex/bittrex_helper.php';
+
+
+// use BittrexHelper;
+// use BittrexProperties;
+// use BittrexTicker;
+// use CoinMarketCap;
+// use Logger;
+// use MarketMaker;
+// use OrderBook;
+// use SmallestSpread;
+
+include 'config/BittrexProperties.php';
+include 'Bittrex/BittrexHelper.php';
 include 'Bittrex/BittrexTicker.php';
-include 'Utils/logger.php';
 include 'Strategy/MarketMaker.php';
-include 'Strategy/SmallestSpread.php';
+include 'Utils/CoinMarketCap.php';
+include 'Utils/Logger.php';
+include 'Utils/OrderBook.php';
+include 'Utils/SmallestSpread.php';
 
 ini_set('max_execution_time', 300);
     
     echo '<b>BlockChain Trading Bot</b> <br/><br/><br/>';
     
-     
-    $bittrexProp    = new BittrexProperties;
-    $bittrexHelper  = new BittrexHelper;
-    $bittrexTicker  = new BittrexTicker;
-    $marketMaker    = new MarketMaker;
-    $smallestSpread = new SmallestSpread;
     
-//     $logger         = new Logger;
+    $marketMakerBot    = new MarketMaker(Array( 'limit'         => 20,
+                                                'limitStart'    => 1,
+                                                'aggression'    => 3,
+                                                'spreadMax'     => 7,
+                                                'spreadMin'     => 7,
+                                                'excludecoins'  => ['USDT', 'TUSD']
+                                        ));
+    $marketMakerBot->run();
+    
+    /*
+    $bittrexProp    = new BittrexProperties();
+    $bittrexHelper  = new BittrexHelper();
+    $bittrexTicker  = new BittrexTicker();
+    $smallestSpread = new SmallestSpread();
+    
+//     $Logger         = new Logger;
     
 //     echo $bittrexProp->getBittrexBalanceAll();
     
     
-    $bittrex_open_order         = $bittrexHelper->getBittrexOpenOrder($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexOpenOrderURL());
-    $bittrex_bal_all            = $bittrexHelper->getBittrexBalances($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexBalanceAllURL());
+//     $bittrex_open_order         = $bittrexHelper->getBittrexOpenOrder($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexOpenOrderURL());
+       $bittrex_bal_all            = $bittrexHelper->getBittrexBalances($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexBalanceAllURL());
 //     $market_summaries_Array     = $bittrexHelper->getBittrexMarketSummaries($bittrexProp->getBittrexMarketSummariesURL());
-    $market_Array               = $bittrexHelper->getBittrexMarkets($bittrexProp->getBittrexMarketURL());
+//     $market_Array               = $bittrexHelper->getBittrexMarkets($bittrexProp->getBittrexMarketURL());
     
 //     echo "<pre>";
 //     echo json_encode($market_Array, JSON_PRETTY_PRINT);
@@ -35,6 +57,8 @@ ini_set('max_execution_time', 300);
     $fgc = json_decode(file_get_contents($cnmkt), true);
     $fgc_data = $fgc['data'];
     $counter = 0;
+    $showOrderBook =  true;
+    $balance_BTC        = $bittrexHelper->getBittrexBalance($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexBalanceBTCURL());
     foreach($fgc_data as $item) {
         $fgc_data_quotes        = $item['quotes'];
         $fgc_data_quotes_USD    = $fgc_data_quotes['USD'];
@@ -44,15 +68,13 @@ ini_set('max_execution_time', 300);
         if($counter < count($fgc_data)){
             $percent_change_7d = $fgc_data_quotes_USD["percent_change_7d"];
             if($percent_change_7d > -40 && $percent_change_7d < 40){
-                $symbol         = $item['symbol'];
-                $cost_USD       = number_format($fgc_data_quotes_USD["price"], 8);
-                $cost_BTC       = number_format($fgc_data_quotes_BTC["price"], 8);
-                $balance_BTC    = $bittrexHelper->getBittrexBalance($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexBalanceBTCURL());
-                $fifthBal       = number_format(($balance_BTC / 5), 8);
-                $amountToBuy    = number_format(($fifthBal / $cost_BTC), 8);
-                $market         = 'BTC-' .$symbol;
-                
-                
+                $symbol             = $item['symbol'];
+                $cost_USD           = number_format($fgc_data_quotes_USD["price"], 8);
+                $cost_BTC           = number_format($fgc_data_quotes_BTC["price"], 8);
+//              $balance_BTC_USD    = number_format(($balance_BTC * $BTC_USD_cost), 8);
+                $fifthBal           = number_format(($balance_BTC / 5), 8);
+                $amountToBuy        = number_format(($fifthBal / $cost_BTC), 8);
+                $market             = 'BTC-' .$symbol;
                 
                 
                 
@@ -75,6 +97,21 @@ ini_set('max_execution_time', 300);
                     echo '$cost_USD : '     . $cost_USD     . "<br/>";
                     echo '$amountToBuy : '  . $amountToBuy  . "<br/>";
                     echo "<br/>";
+                    
+                    if($showOrderBook){
+                        $buyOrderBook = $bittrexHelper->getBittrexOrderBook($bittrexProp->getBittrexOrderBookURL(), $market, 'buy');
+                        $sellOrderBook = $bittrexHelper->getBittrexOrderBook($bittrexProp->getBittrexOrderBookURL(), $market, 'sell');
+                        
+                        $orderBook = new OrderBook($buyOrderBook);
+                        
+//                         echo "<pre>";
+//                         echo 'sell order book: '.count($sellOrderBook).'<br/>';
+//                         echo 'buy order book: '.count($buyOrderBook).'<br/>';
+//                         echo json_encode($buyOrderBook, JSON_PRETTY_PRINT);
+//                         echo "</pre>";
+                        $showOrderBook = false;
+                    }
+                    
                     
                     
                 // the lower the spread the higher the volume
@@ -99,7 +136,6 @@ ini_set('max_execution_time', 300);
                 echo "<pre>";
                 echo 'smallest Spread : <br/>';
                 echo $smallestSpread->toJSON();
-//                 echo json_encode($smallestSpread->expose(), JSON_PRETTY_PRINT);
                 echo "</pre>";
                 
 //                 $buyOrderBook = $bittrexHelper->getBittrexOrderBook($bittrexProp->getBittrexOrderBookURL(), $market, 'buy');
@@ -118,7 +154,7 @@ ini_set('max_execution_time', 300);
             
         }
     }
-    
+    */
     
     
     

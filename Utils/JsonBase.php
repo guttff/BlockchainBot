@@ -1,5 +1,5 @@
 <?php
-// namespace Utils;
+// namespace JsonBase;
 
 class JsonBase
 {
