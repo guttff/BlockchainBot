@@ -10,14 +10,14 @@
 // use OrderBook;
 // use SmallestSpread;
 
-include 'config/BittrexProperties.php';
-include 'Bittrex/BittrexHelper.php';
-include 'Bittrex/BittrexTicker.php';
+// include 'config/BittrexProperties.php';
+// include 'Bittrex/BittrexHelper.php';
+// include 'Bittrex/BittrexTicker.php';
 include 'Strategy/MarketMaker.php';
-include 'Utils/CoinMarketCap.php';
-include 'Utils/Logger.php';
-include 'Utils/OrderBook.php';
-include 'Utils/SmallestSpread.php';
+// include 'Utils/CoinMarketCap.php';
+// include 'Utils/Logger.php';
+// include 'Utils/OrderBook.php';
+// include 'Utils/SmallestSpread.php';
 
 ini_set('max_execution_time', 300);
     
