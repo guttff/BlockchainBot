@@ -85,7 +85,7 @@
 				        border: 1px solid #000;
 				    }
 				</style>
-	            <div class="panel panel-default " style="max-height: 500px; overflow: auto">
+	            <div class="panel panel-default " style="max-height: 400px; overflow: auto">
 	                <div class="panel-body form-horizontal bot-form container-fluid">
 	                    <div class="form-group row">
 	                        <label for="concept" class="col-sm-3 control-label">Bot Name</label>
@@ -145,7 +145,13 @@
 	                        </div>
 	                    </div>
 	                    <div class="form-group row">
-	                        <label for="concept" class="col-sm-3 control-label">Spread</label>
+	                        <label for="concept" class="col-sm-3 control-label">Spread Max</label>
+	                        <div class="col-sm-9">
+	                            <input type="text" class="form-control" id="concept" name="concept">
+	                        </div>
+	                    </div>
+	                     <div class="form-group row">
+	                        <label for="concept" class="col-sm-3 control-label">Spread Min</label>
 	                        <div class="col-sm-9">
 	                            <input type="text" class="form-control" id="concept" name="concept">
 	                        </div>
@@ -173,7 +179,7 @@
 	                 -->
 	            </div>       
 	            <hr>
-	             
+	            <!-- 
 	            <div class="row dash" style="margin: 10px 0; padding: 10px;">
 	            	<ul>
 	            		<li>
@@ -198,8 +204,8 @@
 	            		</li>
 	            	</ul>
 	            </div>
-	             
-	            <div class="row" style="max-height: 500px; overflow: auto; background: #fff;">
+	            -->
+	            <div class="row" style="max-height: 400px; overflow: auto; background: #fff;">
 	                <div class="col-xs-12">
 	                    <div class="table-responsive">
 	                        <table class="table preview-table">
