@@ -100,6 +100,49 @@
 	                        </div>
 	                    </div> 
 	                    <div class="form-group row">
+	                        <label for="description" class="col-sm-3 control-label">Limit</label>
+	                        <div class="col-sm-9">
+	                            <select class="form-control">
+	                            	<?php for ($i = 100 ; $i > 0 ; $i--){ ?>
+	                            	<option value="<?php echo $i; ?>"><?php echo $i ;?></option>
+	                            	<?php } ?>
+	                            </select>
+	                        </div>
+	                    </div> 
+	                    <div class="form-group row">
+	                        <label for="concept" class="col-sm-3 control-label">Min Coin Price</label>
+	                        <div class="col-sm-9">
+	                            <input type="text" class="form-control" id="concept" name="concept">
+	                        </div>
+	                    </div>
+	                    <div class="form-group row">
+	                        <label for="description" class="col-sm-3 control-label">Limit Start</label>
+	                        <div class="col-sm-9">
+	                            <input type="text" class="form-control" id="description" name="description">
+	                        </div>
+	                    </div> 
+	                    <div class="form-group row">
+	                        <label for="status" class="col-sm-3 control-label">Trend</label>
+	                        <div class="col-sm-9">
+	                            <select class="form-control" id="status" name="status">
+	                                <option>UP</option>
+	                                <option>DOWN</option>
+	                            </select>
+	                        </div>
+	                    </div>
+	                    <div class="form-group row">
+	                        <label for="concept" class="col-sm-3 control-label">Spread Max</label>
+	                        <div class="col-sm-9">
+	                            <input type="text" class="form-control" id="concept" name="concept">
+	                        </div>
+	                    </div>
+	                     <div class="form-group row">
+	                        <label for="concept" class="col-sm-3 control-label">Spread Min</label>
+	                        <div class="col-sm-9">
+	                            <input type="text" class="form-control" id="concept" name="concept">
+	                        </div>
+	                    </div>
+	                    <div class="form-group row">
 	                        <label for="amount" class="col-sm-3 control-label">Budget</label>
 	                        <div class="col-sm-9">
 	                            <input type="number" class="form-control" id="amount" name="amount">
@@ -135,27 +178,6 @@
 	                            <input type="date" class="form-control" id="date" name="date">
 	                        </div>
 	                    </div>   
-	                    <div class="form-group row">
-	                        <label for="status" class="col-sm-3 control-label">Trend</label>
-	                        <div class="col-sm-9">
-	                            <select class="form-control" id="status" name="status">
-	                                <option>UP</option>
-	                                <option>DOWN</option>
-	                            </select>
-	                        </div>
-	                    </div>
-	                    <div class="form-group row">
-	                        <label for="concept" class="col-sm-3 control-label">Spread Max</label>
-	                        <div class="col-sm-9">
-	                            <input type="text" class="form-control" id="concept" name="concept">
-	                        </div>
-	                    </div>
-	                     <div class="form-group row">
-	                        <label for="concept" class="col-sm-3 control-label">Spread Min</label>
-	                        <div class="col-sm-9">
-	                            <input type="text" class="form-control" id="concept" name="concept">
-	                        </div>
-	                    </div>
 	                </div>
 	            </div>            
 	        </div> <!-- / panel preview -->

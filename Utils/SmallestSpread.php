@@ -1,7 +1,9 @@
 <?php
-// namespace Strategy;
+// namespace SmallestSpread;
 
+// use JsonBase;
 require_once "Utils/JsonBase.php";
+
 
 class SmallestSpread extends JsonBase
 {

@@ -1,5 +1,8 @@
 <?php
-// namespace Bittrex;
+
+// namespace BittrexTicker;
+
+// use JsonBase;
 
 require_once "Utils/JsonBase.php";
 
