@@ -15,6 +15,7 @@ class CoinMarketCap extends JsonBase
     private $fgcDataQuotes;
     private $fgcDataQuotesUSD;
     private $fgcDataQuotesBTC;
+    private $fgcDataQuotesUSDPercentChange7Day;
     
     function __construct($limit, $limitStart='', $currency = 'BTC'){
         $this->limit        = $limit;
@@ -173,6 +174,22 @@ class CoinMarketCap extends JsonBase
     {
         $this->fgcDataQuotesBTC = $fgcDataQuotesBTC;
     }
+    /**
+     * @return mixed
+     */
+    public function getFgcDataQuotesUSDPercentChange7Day()
+    {
+        return $this->fgcDataQuotesUSDPercentChange7Day;
+    }
+
+    /**
+     * @param mixed $fgcDataQuotesUSDPercentChange7Day
+     */
+    public function setFgcDataQuotesUSDPercentChange7Day($fgcDataQuotesUSDPercentChange7Day)
+    {
+        $this->fgcDataQuotesUSDPercentChange7Day = $fgcDataQuotesUSDPercentChange7Day;
+    }
+
 
     
     
