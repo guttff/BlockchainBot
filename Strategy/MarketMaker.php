@@ -128,6 +128,8 @@ Class MarketMaker extends JsonBase implements Strategy{
                 
                 $orderBook = new OrderBook($buyOrderBook);
                 
+                $marketHistory = $bittrexHelper->getBittrexMarketHistory($bittrexProp->getBittrexMarketHistoryURL(), $market);
+                
                 echo "<br/>";
                 
                 echo "<pre>";
