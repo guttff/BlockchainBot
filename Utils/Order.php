@@ -1,7 +1,9 @@
 <?php
 // namespace Order;
 
-class Order
+require_once "Utils/JsonBase.php";
+
+class Order extends JsonBase
 {
     public $quantity;
     public $rate;

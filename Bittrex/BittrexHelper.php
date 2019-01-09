@@ -133,18 +133,19 @@ Class BittrexHelper{
         $nonce=time();
         if($type === '')
             $type = 'both';
-            $bittrex_order_book_URL .= $market . '&type=' . $type . '&nonce=' . $nonce;
-            $orderBookArray = array();
-            $obj = json_decode(file_get_contents($bittrex_order_book_URL), true);
-            
-            if($obj['success']){
-                $fgc_result = $obj['result'];
-                foreach($fgc_result as $item) {
-                    array_push($orderBookArray,$item);
-                }
+        
+        $bittrex_order_book_URL .= $market . '&type=' . $type . '&nonce=' . $nonce;
+        $orderBookArray = array();
+        $obj = json_decode(file_get_contents($bittrex_order_book_URL), true);
+        
+        if($obj['success']){
+            $fgc_result = $obj['result'];
+            foreach($fgc_result as $item) {
+                array_push($orderBookArray,$item);
             }
-            
-            return $orderBookArray;
+        }
+        
+        return $orderBookArray;
     }
     
     function placeBittrexBuyLimitOrder($apisecret, $bittrex_buy_limit, $symbol, $quantity, $rate){
@@ -185,7 +186,7 @@ Class BittrexHelper{
             $tickerData = $obj['result'];
             $bt->setAsk($tickerData['Ask']);
             $bt->setBid($tickerData['Bid']);
-            $bt->setLast($tickerData['Ask']);
+            $bt->setLast($tickerData['Last']);
         }
            
         return $bt;

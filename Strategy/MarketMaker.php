@@ -1,17 +1,22 @@
 <?php
 
+
+use Strategy\Strategy;
+
 require_once 'config/BittrexProperties.php';
 require_once 'Bittrex/BittrexHelper.php';
 require_once 'Bittrex/BittrexTicker.php';
-require_once 'Strategy/MarketMaker.php';
 require_once 'Utils/CoinMarketCap.php';
+require_once 'Utils/Compare.php';
 require_once 'Utils/Logger.php';
 require_once 'Utils/OrderBook.php';
 require_once 'Utils/SmallestSpread.php';
 
 require_once "Utils/JsonBase.php";
+require_once 'Strategy/MarketMaker.php';
+require_once "Strategy/Strategy.php";
 
-Class MarketMaker extends JsonBase{
+Class MarketMaker extends JsonBase implements Strategy{
     
     private $limit;
     private $limitStart;
@@ -23,27 +28,30 @@ Class MarketMaker extends JsonBase{
     private $maxUSDCost;
     private $percentChangeMax;
     private $percentChangeMin;
+    private $profitUSDAmount;
+    private $profitPercent;
     
     public function expose() {
         return get_object_vars($this);
     }
     
     function __construct(Array $args){
-        $this->limit                = (isset($args['limit']))               ? $args['limit']            : null;
-        $this->limitStart           = (isset($args['limitStart']))          ? $args['limitStart']       : null;
-        $this->aggression           = (isset($args['aggression']))          ? $args['aggression']       : null;
-        $this->spreadMin            = (isset($args['spreadMin']))           ? $args['spreadMin']        : null;
-        $this->spreadMax            = (isset($args['spreadMax']))           ? $args['spreadMax']        : null;
-        $this->excludeCoins         = (isset($args['excludeCoins']))        ? $args['excludeCoins']     : array();
-        $this->minUSDCost           = (isset($args['minUSDCost']))          ? $args['minUSDCost']       : null;
-        $this->maxUSDCost           = (isset($args['maxUSDCost']))          ? $args['maxUSDCost']       : null;
-        $this->percentChangeMax     = (isset($args['percentChangeMax']))    ? $args['percentChangeMax'] : null;
-        $this->percentChangeMin     = (isset($args['percentChangeMin']))    ? $args['percentChangeMin'] : null;
-            
+        $this->limit                = (array_key_exists('limit', $args))               ? $args['limit']                         : null;
+        $this->limitStart           = (array_key_exists('limitStart', $args))          ? $args['limitStart']                    : null;
+        $this->aggression           = (array_key_exists('aggression', $args))          ? $args['aggression']                    : null;
+        $this->spreadMin            = (array_key_exists('spreadMin', $args))           ? $args['spreadMin']                     : null;
+        $this->spreadMax            = (array_key_exists('spreadMax', $args))           ? $args['spreadMax']                     : null;
+        $this->excludeCoins         = (array_key_exists('excludecoins', $args))        ? $args['excludecoins']                  : array();
+        $this->minUSDCost           = (array_key_exists('minUSDCost', $args))          ? number_format($args['minUSDCost'],8)   : null;
+        $this->maxUSDCost           = (array_key_exists('maxUSDCost', $args))          ? number_format($args['maxUSDCost'],8)   : null;
+        $this->percentChangeMax     = (array_key_exists('percentChangeMax', $args))    ? $args['percentChangeMax']              : null;
+        $this->percentChangeMin     = (array_key_exists('percentChangeMin', $args))    ? $args['percentChangeMin']              : null;
+        
     }
     
     public function run() {
         
+        $compare        = new Compare();
         $bittrexProp    = new BittrexProperties();
         $bittrexHelper  = new BittrexHelper();
         $bittrexTicker  = new BittrexTicker();
@@ -57,6 +65,7 @@ Class MarketMaker extends JsonBase{
         
         
         $balance_BTC        = $bittrexHelper->getBittrexBalance($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexBalanceBTCURL());
+        $balance_USD        = null;
         foreach($coinMarketCap->getFgcData() as $data) {
             $coinMarketCap->setFgcDataQuotes($data['quotes']);
             $coinMarketCap->setFgcDataQuotesBTC($coinMarketCap->getFgcDataQuotes()['BTC']);
@@ -64,8 +73,8 @@ Class MarketMaker extends JsonBase{
             $coinMarketCap->setFgcDataQuotesUSDPercentChange7Day($coinMarketCap->getFgcDataQuotesUSD()["percent_change_7d"]);
             
             // only trade on coin with last 7 day percent change are in the specified range
-            if($coinMarketCap->getFgcDataQuotesUSDPercentChange7Day() > $this->percentChangeMin && 
-                $coinMarketCap->getFgcDataQuotesUSDPercentChange7Day() < $this->percentChangeMax){
+            if(($coinMarketCap->getFgcDataQuotesUSDPercentChange7Day() > $this->percentChangeMin && 
+                $coinMarketCap->getFgcDataQuotesUSDPercentChange7Day() < $this->percentChangeMax)){
                 
                 $symbol             = $data['symbol'];
                 $market             = 'BTC-' .$symbol;
@@ -76,14 +85,16 @@ Class MarketMaker extends JsonBase{
                 
                 $bittrexTicker = $bittrexHelper->getBittrexTicker($bittrexProp->getBittrexTickerURL(), $market);
                 
+             
                 
                 // do not trade anything higher or lower than the price min and max or are in the exclusion array
-                if(($cost_USD > $this->minUSDCost && $cost_USD < $this->maxUSDCost )|| 
-                    array_search($symbol,$this->excludeCoins)  || 
+                if(!($compare->isGreatherOrEqual($cost_USD, $this->minUSDCost) && 
+                    $compare->isLessOrEqual($cost_USD, $this->maxUSDCost) )      || 
+                    (array_search($symbol,$this->excludeCoins) !== false)        || 
                     $bittrexTicker->getBid() == null)
                     continue;
                   
-                
+                    
                 // the lower the spread the higher the volume
                 $spreadPercent = $this->getSpreadPercent($bittrexTicker->getBid(), $bittrexTicker->getAsk(), $bittrexTicker->getLast());
                 
@@ -110,6 +121,23 @@ Class MarketMaker extends JsonBase{
                 echo $bittrexTicker->toJSON();
                 echo "<br/>";
                 echo 'spread percent :' . $spreadPercent .' % <br/>';
+                echo "</pre>";
+                
+                
+                $buyOrderBook = $bittrexHelper->getBittrexOrderBook($bittrexProp->getBittrexOrderBookURL(), $market, 'buy');
+                
+                $orderBook = new OrderBook($buyOrderBook);
+                
+                echo "<br/>";
+                
+                echo "<pre>";
+                echo '$buyOrderBook Mean for market :' .$market . '<br/>';
+                echo $orderBook->getOrderBookMean()->toJSON();
+                echo "<br/>";
+                echo '$buyOrderBook median for market :' .$market . '<br/>';
+                echo $orderBook->getOrderBookMedian()->toJSON();
+                echo "<br/>";
+                echo "-------------------------------------------------------";
                 echo "</pre>";
                 
             }

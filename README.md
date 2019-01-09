@@ -36,6 +36,23 @@ SmallestSpread = {
 #	getBuyOrderWall()
 #	getSellOrderWall()
 
+# 	getsimpleMovingAverage()
+#	getExponentialMovingAverage()
+
+#	-------------------------------
+
+#	SMA = simple moving average
+#	SMA = mean of values over time period
+# 	For example, to calculate a basic 10-day moving average 
+#	you would add up the closing prices from the past 10 days
+# 	and then divide the result by 10.
+
+#	EMA = (P * a) + (previous EMA * (1-a))
+#	P = current price
+#	a = smoothing factor = 2 / (1 + N)
+# 	N = number of time periods
+#	use SMA when previous EMA is unknown
+
 #	-------------------------------
 
 public void main(String[] args){
@@ -83,6 +100,26 @@ public void main(String[] args){
  
  $botRisky.run();
 
+#	--------------------------------
+#	Strategy() interface
+#		run()
+#	MarketMaker extends JsonBase implements Strategy 
+#  		get list of coins
+#		filter possible trading coins list
+#		get next coin to trade (smallest spread)
+#		
+#			get the order book
+#			determine isUpTrend
+#			determine candle
+#			place buy order
+#
+#
+#		get next coin to trade (smallest spread) from filter possible trading coins list
+#		
+#			get the order book
+#			determine isUpTrend
+#			determine candle
+#			place buy order
 
 
 		

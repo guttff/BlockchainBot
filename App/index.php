@@ -169,13 +169,13 @@
 	                    <div class="form-group row">
 	                        <label for="date" class="col-sm-3 control-label">Start Now</label>
 	                        <div class="col-sm-9">
-	                            <input type="checkbox" class="form-control" id="date" name="date">
+	                            <input type="checkbox" class="form-control" id="startNow" name="startNow">
 	                        </div>
 	                    </div> 
 	                    <div class="form-group row">
 	                        <label for="date" class="col-sm-3 control-label">Start On</label>
 	                        <div class="col-sm-9">
-	                            <input type="date" class="form-control" id="date" name="date">
+	                            <input type="date" class="form-control" id="startDate" name="startDate">
 	                        </div>
 	                    </div>   
 	                </div>
