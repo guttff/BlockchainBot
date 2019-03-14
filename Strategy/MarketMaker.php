@@ -13,6 +13,7 @@ require_once 'Utils/OrderBook.php';
 require_once 'Utils/SmallestSpread.php';
 
 require_once "Utils/JsonBase.php";
+require_once "Utils/JsonParser.php";
 require_once "UtilsHelpers/MarketHistoryContainer.php";
 require_once 'Strategy/MarketMaker.php';
 require_once "Strategy/Strategy.php";
@@ -167,6 +168,9 @@ Class MarketMaker extends JsonBase implements Strategy{
 //                 echo $marketHistoryContainer->toJSON();
                 
                 
+                echo '$marketHistoryContainer getMarketHistory for market :' .$market . '<br/>';
+                echo JsonParser::toJSON($marketHistoryContainer->getMarketHistory());
+                echo "<br/>";
                 echo '$marketHistoryContainer Mean for market :' .$market . '<br/>';
                 echo $marketHistoryContainer->getMarketHistoryMean()->toJSON();
                 echo "<br/>";

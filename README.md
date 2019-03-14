@@ -77,6 +77,32 @@ public static void main(String[] args){
 
 }
 
+#	-------------------------------
+
+class JsonParser
+{
+    public static function expose($obj) {
+        return get_object_vars($obj);
+    }
+    
+    public static function toJSON($obj){
+        return json_encode($obj, JSON_PRETTY_PRINT);
+    }
+}
+
+#	-------------------------------
+
+class JsonBase
+{
+    public function toJSON(){
+        return json_encode($this->expose(), JSON_PRETTY_PRINT);
+    }
+    
+    public function expose() {
+        return get_object_vars($this);
+    }
+    
+}
 
 #	-------------------------------
 
