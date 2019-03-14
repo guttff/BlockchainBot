@@ -3,7 +3,7 @@
 
 // use JsonBase;
 require_once "Utils/JsonBase.php";
-require_once "Utils/Order.php";
+require_once "Utils/BaseOrder.php";
 
 // use Order;
 
@@ -33,17 +33,11 @@ class OrderBook extends JsonBase
         $rateTotal      = 0;
         $totalItems     = 0;
         
-        $quantityMin    = 0;
-        $rateMin        = 0;
-        
-        $quantityMax    = 0;
-        $rateMax        = 0;
-        
         $rateArray      = Array();
         $quantityArray  = Array();
         
         foreach($odrBk as $item){
-            $order = new Order();
+            $order = new BaseOrder();
             $order->setQuantity($item['Quantity']);
             $order->setRate(number_format($item['Rate'],8, ".", " "));
             array_push($this->orderBook,$order);
@@ -54,16 +48,20 @@ class OrderBook extends JsonBase
             
             $quantityTotal  += $order->getQuantity();
             $rateTotal      += $order->getRate();
+                        
             
-            $quantityMin = ($totalItems == 0) ? $order->getQuantity() : $quantityMin;
-            $quantityMin = ($quantityMin > $order->getQuantity()) ? $order->getQuantity() : $quantityMin;
-            $rateMin = ($totalItems == 0) ? $order->getRate() : $rateMin;
-            $rateMin = ($rateMin > $order->getRate()) ? $order->getRate() : $rateMin;
+            if($totalItems == 0){
+                $this->setOrderBookMinimum($order);
+                $this->setOrderBookMaximum($order);
+            }
             
-            $quantityMax = ($totalItems == 0) ? $order->getQuantity() : $quantityMax;
-            $quantityMax = ($quantityMax < $order->getQuantity()) ? $order->getQuantity() : $quantityMax;
-            $rateMax = ($totalItems == 0) ? $order->getRate() : $rateMax;
-            $rateMax = ($rateMax < $order->getRate()) ? $order->getRate() : $rateMax;
+            if($this->getOrderBookMinimum()->getRate() > $order->getRate())
+                $this->setOrderBookMinimum($order);
+                
+            if($this->getOrderBookMaximum()->getRate() < $order->getRate())
+                $this->setOrderBookMaximum($order);
+                    
+            
             
             $totalItems++;
         }
@@ -71,15 +69,13 @@ class OrderBook extends JsonBase
         
         $this->calculateMean($rateTotal, $quantityTotal, $totalItems);
         $this->calculateMedian($rateArray, $quantityArray, $totalItems);
-        $this->calculateMinimum($rateMin, $quantityMin);
-        $this->calculateMaximum($rateMax, $quantityMax);
         
         $this->calculateMode();
     }
     
     function calculateMean($rateTotal, $quantityTotal, $totalItems){
         
-        $order = new Order();
+        $order = new BaseOrder();
         $order->setQuantity(number_format(($quantityTotal/$totalItems), 2, '.', ''));
         $order->setRate(number_format(($rateTotal/$totalItems),8, '.', ''));
         
@@ -88,7 +84,7 @@ class OrderBook extends JsonBase
     
     function calculateMedian($rateArray, $quantityArray, $totalItems){
         
-        $order = new Order();
+        $order = new BaseOrder();
         $order->setQuantity(number_format($this->median($totalItems, $quantityArray), 2, '.', ''));
         $order->setRate(number_format($this->median($totalItems, $rateArray),8, '.', ''));
         
@@ -98,24 +94,6 @@ class OrderBook extends JsonBase
     /* TODO: */
     function calculateMode(){
         
-    }
-    
-    function calculateMinimum($rateMin, $quantityMin){
-        
-        $order = new Order();
-        $order->setQuantity(number_format($quantityMin, 2, '.', ''));
-        $order->setRate(number_format($rateMin,8, '.', ''));
-        
-        $this->orderBookMinimum = $order;
-    }
-    
-    function calculateMaximum($rateMax, $quantityMax){
-        
-        $order = new Order();
-        $order->setQuantity(number_format($quantityMax, 2, '.', ''));
-        $order->setRate(number_format($rateMax,8, '.', ''));
-        
-        $this->orderBookMaximum = $order;
     }
     
     
@@ -179,9 +157,8 @@ class OrderBook extends JsonBase
     {
         return $this->orderBookMode;
     }
-
     /**
-     * @return mixed
+     * @return BaseOrder
      */
     public function getOrderBookMinimum()
     {
@@ -189,12 +166,29 @@ class OrderBook extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @param BaseOrder $orderBookMinimum
+     */
+    public function setOrderBookMinimum($orderBookMinimum)
+    {
+        $this->orderBookMinimum = $orderBookMinimum;
+    }
+
+    /**
+     * @return BaseOrder
      */
     public function getOrderBookMaximum()
     {
         return $this->orderBookMaximum;
     }
+
+    /**
+     * @param BaseOrder $orderBookMaximum
+     */
+    public function setOrderBookMaximum($orderBookMaximum)
+    {
+        $this->orderBookMaximum = $orderBookMaximum;
+    }
+
 
     
     

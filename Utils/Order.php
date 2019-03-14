@@ -1,43 +1,103 @@
 <?php
-// namespace Order;
+// include "BaseOrder.php";
 
-require_once "Utils/JsonBase.php";
+require_once "Utils/BaseOrder.php";
 
-class Order extends JsonBase
+class Order extends BaseOrder
 {
-    public $quantity;
-    public $rate;
+    
+    private $market;            // BTC-XRP
+    private $time;              // time in UTC
+    private $fillType; 	        // partial || Full
+    private $OrderType;		    // buy || sell
+    private $filledAmount;
+    
+    
+    
+    
     
     /**
-     * @return mixed
+     * @return $market
      */
-    public function getQuantity()
+    public function getMarket()
     {
-        return $this->quantity;
+        return $this->market;
     }
 
     /**
-     * @param mixed $quantity
+     * @param $market
      */
-    public function setQuantity($quantity)
+    public function setMarket($market)
     {
-        $this->quantity = $quantity;
+        $this->market = $market;
     }
 
     /**
-     * @return mixed
+     * @return $time
      */
-    public function getRate()
+    public function getTime()
     {
-        return $this->rate;
+        return $this->time;
     }
 
     /**
-     * @param mixed $rate
+     * @param $time
      */
-    public function setRate($rate)
+    public function setTime($time)
     {
-        $this->rate = $rate;
+        $this->time = $time;
     }
+
+    /**
+     * @return $fillType
+     */
+    public function getFillType()
+    {
+        return $this->fillType;
+    }
+
+    /**
+     * @param $fillType
+     */
+    public function setFillType($fillType)
+    {
+        $this->fillType = $fillType;
+    }
+
+    /**
+     * @return $OrderType
+     */
+    public function getOrderType()
+    {
+        return $this->OrderType;
+    }
+
+    /**
+     * @param $OrderType
+     */
+    public function setOrderType($OrderType)
+    {
+        $this->OrderType = $OrderType;
+    }
+
+    /**
+     * @return $filledAmount
+     */
+    public function getFilledAmount()
+    {
+        return $this->filledAmount;
+    }
+
+    /**
+     * @param $filledAmount
+     */
+    public function setFilledAmount($filledAmount)
+    {
+        $this->filledAmount = $filledAmount;
+    }
+
+    
+    
 }
+
 ?>

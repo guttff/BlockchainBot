@@ -1,6 +1,6 @@
 # BlockchainBot
 
-Order = {
+BaseOrder = {
 		rate 		: 0.0123,
 		quantity 	: 300
 	}
@@ -70,7 +70,7 @@ marketHistory = {
 
 public static void main(String[] args){
 
-	botManagerThread(); // spin up new bot
+	botManagerThread(); // spin up new bot singleton
 	buildCoinToTradeThread();
 	buyCoinToTradeThread();
 	sellCoinToTradeThread();
@@ -81,25 +81,33 @@ public static void main(String[] args){
 #	-------------------------------
 
 
-public botManagerThread(){
+class botManagerThread() extends JsonBase{
 
-	$totalProfitUSD		= 0;
-	$profitPercent		= 0;
-	$startingBalanceUSD	= 0;
-	$currentBalanceUSD	= 0;
-	$upTime				= 0;
-	$totalDeficitUSD	= 0;
-	$startTime			= now();
-	$botsArray      	= Array();
-	$profitBotsArray  	= Array();
-	$deficitBotsArray  	= Array();
-	$coinsToTradeArray 	= Array();
+	private $totalProfitUSD		= 0;
+	private $profitPercent		= 0;
+	private $startingBalanceUSD	= 0;
+	private $currentBalanceUSD	= 0;
+	private $upTime				= 0;
+	private $totalDeficitUSD	= 0;
+	private $startTime			= now();
+	private $botsArray      	= Array();
+	private $profitBotsArray  	= Array();
+	private $deficitBotsArray  	= Array();
+	private $coinsToTradeArray 	= Array();
 }
 
 
 #	-------------------------------
 
-public	Bot(){
+Inteface strategy{
+
+	public function run();
+}
+
+#	-------------------------------
+
+
+class Bot extends JsonBase implements Strategy{
 
 
     private $limit;
@@ -132,6 +140,56 @@ public	Bot(){
     private $pendingSellOrderList = Array(); // an array of open sell order
     
 	
+
+}
+
+#	-------------------------------
+
+class BaseOrder extends JsonBase{
+
+	public $rate;
+	public $quantity;
+	
+}
+
+
+#	-------------------------------
+
+class Order extends BaseOrder{
+
+	private $market;
+	private $time;
+	private $fillType; 	// partial || Full
+	private $OrderType;		// buy || sell
+	private $filledAmount;
+	
+}
+
+#	-------------------------------
+
+class MovingAverage extends JsonBase{
+
+
+    #	SMA = simple moving average
+    #	SMA = mean of values over time period
+    # 	For example, to calculate a basic 10-day moving average
+    #	you would add up the closing prices from the past 10 days
+    # 	and then divide the result by 10.
+    
+    #	EMA = (P * a) + (previous EMA * (1-a))
+    #	P = current price
+    #	a = smoothing factor = 2 / (1 + N)
+    # 	N = number of time periods
+    #	use SMA when previous EMA is unknown
+    
+    private $sma;
+    private $previousEMA;
+    private $N_timePeriods;
+    private $a_smoothingfactor;
+    private $P_currPrice;
+    
+ 	getsimpleMovingAverage()
+	getExponentialMovingAverage()
 
 }
 

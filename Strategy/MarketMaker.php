@@ -147,6 +147,9 @@ Class MarketMaker extends JsonBase implements Strategy{
                 $orderBook = new OrderBook($buyOrderBook);
                 
                 $marketHistory = $bittrexHelper->getBittrexMarketHistory($bittrexProp->getBittrexMarketHistoryURL(), $market);
+                
+//                 echo var_dump($marketHistory);
+                
                 $marketHistoryContainer = new MarketHistoryContainer($marketHistory);
                 
                 echo "<br/>";
@@ -159,9 +162,10 @@ Class MarketMaker extends JsonBase implements Strategy{
                 echo $orderBook->getOrderBookMedian()->toJSON();
                 echo "<br/>";
                 
-//              echo var_dump($marketHistory);
+//                 echo var_dump($marketHistoryContainer->getMarketHistory());
+//                 echo json_encode($marketHistoryContainer->getMarketHistory(),JSON_PRETTY_PRINT);
+//                 echo $marketHistoryContainer->toJSON();
                 
-//              echo $marketHistoryContainer->toJSON();
                 
                 echo '$marketHistoryContainer Mean for market :' .$market . '<br/>';
                 echo $marketHistoryContainer->getMarketHistoryMean()->toJSON();

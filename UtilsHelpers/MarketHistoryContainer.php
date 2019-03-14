@@ -151,15 +151,7 @@ class MarketHistoryContainer extends JsonBase
     
     
     /**
-     * @return multitype:
-     */
-    public function getMarketHistory()
-    {
-        return $this->marketHistory;
-    }
-
-    /**
-     * @return mixed
+     * @return $marketHistoryMean
      */
     public function getMarketHistoryMean()
     {
@@ -167,7 +159,15 @@ class MarketHistoryContainer extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @param $marketHistoryMean 
+     */
+    public function setMarketHistoryMean($marketHistoryMean)
+    {
+        $this->marketHistoryMean = $marketHistoryMean;
+    }
+
+    /**
+     * @return $marketHistoryMedian
      */
     public function getMarketHistoryMedian()
     {
@@ -175,7 +175,15 @@ class MarketHistoryContainer extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @param $marketHistoryMedian 
+     */
+    public function setMarketHistoryMedian($marketHistoryMedian)
+    {
+        $this->marketHistoryMedian = $marketHistoryMedian;
+    }
+
+    /**
+     * @return $marketHistoryMode
      */
     public function getMarketHistoryMode()
     {
@@ -183,7 +191,15 @@ class MarketHistoryContainer extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @param $marketHistoryMode 
+     */
+    public function setMarketHistoryMode($marketHistoryMode)
+    {
+        $this->marketHistoryMode = $marketHistoryMode;
+    }
+
+    /**
+     * @return $marketHistoryMinimum
      */
     public function getMarketHistoryMinimum()
     {
@@ -191,7 +207,7 @@ class MarketHistoryContainer extends JsonBase
     }
 
     /**
-     * @param MarketHistory $marketHistoryMinimum
+     * @param $marketHistoryMinimum 
      */
     public function setMarketHistoryMinimum($marketHistoryMinimum)
     {
@@ -199,7 +215,15 @@ class MarketHistoryContainer extends JsonBase
     }
 
     /**
-     * @param MarketHistory $marketHistoryMaximum
+     * @return $marketHistoryMaximum
+     */
+    public function getMarketHistoryMaximum()
+    {
+        return $this->marketHistoryMaximum;
+    }
+
+    /**
+     * @param $marketHistoryMaximum 
      */
     public function setMarketHistoryMaximum($marketHistoryMaximum)
     {
@@ -207,14 +231,7 @@ class MarketHistoryContainer extends JsonBase
     }
 
     /**
-     * @return mixed
-     */
-    public function getMarketHistoryMaximum()
-    {
-        return $this->marketHistoryMaximum;
-    }
-    /**
-     * @return mixed
+     * @return $totalItems
      */
     public function getTotalItems()
     {
@@ -222,13 +239,24 @@ class MarketHistoryContainer extends JsonBase
     }
 
     /**
-     * @param mixed $totalItems
+     * @param $totalItems 
      */
     public function setTotalItems($totalItems)
     {
         $this->totalItems = $totalItems;
     }
 
+    /**
+     * @return $marketHistory:
+     */
+    public function getMarketHistory()
+    {
+        return $this->marketHistory;
+    }
+
+    
+    
+    
 
     
     

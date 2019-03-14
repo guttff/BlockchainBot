@@ -29,5 +29,12 @@ class MovingAverage extends JsonBase
         return get_object_vars($this);
     }
     
+    public function getSimpleMovingAverage(){
+        
+    }
+    
+    public function getExponentialMovingAverage(){
+        
+    }
 }
 ?>
