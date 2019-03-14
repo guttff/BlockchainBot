@@ -2,11 +2,18 @@
 // namespace CoinMarketCap;
 
 // use JsonBase;
+use config\CoinMarketCapProperties;
+
 require_once "Utils/JsonBase.php";
+require_once "config/CoinMarketCapProperties.php";
 
 class CoinMarketCap extends JsonBase
 {
+    private $coinMarketCapProperties;
     private $tickerURL;
+    private $btcURL;
+    private $fgcBTC;
+    private $fgcDataBTC;
     private $limit;
     private $limitStart;
     private $currency;
@@ -18,11 +25,15 @@ class CoinMarketCap extends JsonBase
     private $fgcDataQuotesUSDPercentChange7Day;
     
     function __construct($limit, $limitStart='', $currency = 'BTC'){
+        $this->coinMarketCapProperties = new CoinMarketCapProperties();
         $this->limit        = $limit;
         $this->limitStart   = $limitStart;
         $this->currency     = $currency;
-        $this->tickerURL    = ($limitStart != '') ? "https://api.coinmarketcap.com/v2/ticker/?start=".$limitStart."&limit=".$limit."&convert=".$currency 
-                                                  : "https://api.coinmarketcap.com/v2/ticker/?limit=".$limit."&convert=".$currency;
+        $this->btcURL       = $this->coinMarketCapProperties->getCmc_BTC_URL()."&symbol=BTC&convert=USD";
+        $this->fgcBTC       = json_decode(file_get_contents($this->btcURL), true);
+        $this->fgcDataBTC   = $this->fgcBTC['data'];
+        $this->tickerURL    = ($limitStart != '') ? $this->coinMarketCapProperties->getCmc_listings_URL()."&start=".$limitStart."&limit=".$limit."&convert=".$currency 
+                                                  : $this->coinMarketCapProperties->getCmc_listings_URL()."&limit=".$limit."&convert=".$currency;
         $this->fgc          = json_decode(file_get_contents($this->tickerURL), true);
         $this->fgcData      = $this->fgc['data'];
     }
@@ -45,6 +56,30 @@ class CoinMarketCap extends JsonBase
     public function setTickerURL($tickerURL)
     {
         $this->tickerURL = $tickerURL;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBtcURL()
+    {
+        return $this->btcURL;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFgcBTC()
+    {
+        return $this->fgcBTC;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFgcDataBTC()
+    {
+        return $this->fgcDataBTC;
     }
 
     /**

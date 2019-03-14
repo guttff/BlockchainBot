@@ -5,12 +5,13 @@ require_once "Utils/JsonBase.php";
 
 class MarketHistory extends JsonBase
 {
-    private $Id;
-    private $TimeStamp;
-    private $Quantity;
-    private $Price;
-    private $FillType;
-    private $OrderType;
+    public $Id;
+    public $TimeStamp;
+    public $Quantity;
+    public $Price;
+    public $Total;
+    public $FillType;
+    public $OrderType;
     
     
     /**
@@ -43,6 +44,22 @@ class MarketHistory extends JsonBase
     public function getPrice()
     {
         return $this->Price;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTotal()
+    {
+        return $this->Total;
+    }
+
+    /**
+     * @param mixed $Total
+     */
+    public function setTotal($Total)
+    {
+        $this->Total = $Total;
     }
 
     /**

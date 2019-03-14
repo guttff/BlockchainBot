@@ -13,6 +13,7 @@ require_once 'Utils/OrderBook.php';
 require_once 'Utils/SmallestSpread.php';
 
 require_once "Utils/JsonBase.php";
+require_once "UtilsHelpers/MarketHistoryContainer.php";
 require_once 'Strategy/MarketMaker.php';
 require_once "Strategy/Strategy.php";
 
@@ -29,7 +30,24 @@ Class MarketMaker extends JsonBase implements Strategy{
     private $percentChangeMax;
     private $percentChangeMin;
     private $profitUSDAmount;
+    private $profitBTCAmount;
     private $profitPercent;
+    
+    private $upTime;
+    private $startTime; // date()
+    private $name;
+    private $startingBalanceUSD;
+    private $currentBalanceUSD;
+    private $currentBalanceBTC;
+    
+    private $coinsToTrade = Array();
+    
+    private $coinsInBuyOrderList = Array();     // ['BTC-XRP', 'BTC-XLM']
+    private $coinsInSellOrderList = Array();    // ['BTC-XRP', 'BTC-XLM']
+    private $buyOrderList = Array();            // an array of buy order coin list
+    private $sellOrderList = Array();           // an array of sell order coin list
+    private $pendingBuyOrderList = Array();     // an array of open buy order
+    private $pendingSellOrderList = Array();    // an array of open sell order
     
     public function expose() {
         return get_object_vars($this);
@@ -56,7 +74,7 @@ Class MarketMaker extends JsonBase implements Strategy{
         $bittrexHelper  = new BittrexHelper();
         $bittrexTicker  = new BittrexTicker();
         $smallestSpread = new SmallestSpread();
-        $coinMarketCap  = new CoinMarketCap($this->limit, $this->limitStart, 'BTC');
+        $coinMarketCap  = new CoinMarketCap($this->limit, $this->limitStart, 'USD');
         
 //         echo "<pre>";
 //         echo '$coinMarketCap data: <br/>';
@@ -67,8 +85,8 @@ Class MarketMaker extends JsonBase implements Strategy{
         $balance_BTC        = $bittrexHelper->getBittrexBalance($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexBalanceBTCURL());
         $balance_USD        = null;
         foreach($coinMarketCap->getFgcData() as $data) {
-            $coinMarketCap->setFgcDataQuotes($data['quotes']);
-            $coinMarketCap->setFgcDataQuotesBTC($coinMarketCap->getFgcDataQuotes()['BTC']);
+            $coinMarketCap->setFgcDataQuotes($data['quote']);
+//             $coinMarketCap->setFgcDataQuotesBTC($coinMarketCap->getFgcDataQuotes()['BTC']);
             $coinMarketCap->setFgcDataQuotesUSD($coinMarketCap->getFgcDataQuotes()['USD']);
             $coinMarketCap->setFgcDataQuotesUSDPercentChange7Day($coinMarketCap->getFgcDataQuotesUSD()["percent_change_7d"]);
             
@@ -129,6 +147,7 @@ Class MarketMaker extends JsonBase implements Strategy{
                 $orderBook = new OrderBook($buyOrderBook);
                 
                 $marketHistory = $bittrexHelper->getBittrexMarketHistory($bittrexProp->getBittrexMarketHistoryURL(), $market);
+                $marketHistoryContainer = new MarketHistoryContainer($marketHistory);
                 
                 echo "<br/>";
                 
@@ -139,13 +158,452 @@ Class MarketMaker extends JsonBase implements Strategy{
                 echo '$buyOrderBook median for market :' .$market . '<br/>';
                 echo $orderBook->getOrderBookMedian()->toJSON();
                 echo "<br/>";
+                
+//              echo var_dump($marketHistory);
+                
+//              echo $marketHistoryContainer->toJSON();
+                
+                echo '$marketHistoryContainer Mean for market :' .$market . '<br/>';
+                echo $marketHistoryContainer->getMarketHistoryMean()->toJSON();
+                echo "<br/>";
+                echo '$marketHistoryContainer median for market :' .$market . '<br/>';
+                echo $marketHistoryContainer->getMarketHistoryMedian()->toJSON();
+                echo "<br/>";
+                echo '$marketHistoryContainer minimum for market :' .$market . '<br/>';
+                echo $marketHistoryContainer->getMarketHistoryMinimum()->toJSON();
+                echo "<br/>";
+                echo '$marketHistoryContainer maximum for market :' .$market . '<br/>';
+                echo $marketHistoryContainer->getMarketHistoryMaximum()->toJSON();
+                echo "<br/>";
+                echo "-------------------------------------------------------";
                 echo "-------------------------------------------------------";
                 echo "</pre>";
+                
                 
             }
         }
     }
     
+    
+    
+    
+    
+    /**
+     * @return $limit
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param $limit
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+    }
+
+    /**
+     * @return @limitStart
+     */
+    public function getLimitStart()
+    {
+        return $this->limitStart;
+    }
+
+    /**
+     * @param @limitStart
+     */
+    public function setLimitStart($limitStart)
+    {
+        $this->limitStart = $limitStart;
+    }
+
+    /**
+     * @return $aggression
+     */
+    public function getAggression()
+    {
+        return $this->aggression;
+    }
+
+    /**
+     * @param $aggression
+     */
+    public function setAggression($aggression)
+    {
+        $this->aggression = $aggression;
+    }
+
+    /**
+     * @return $spreadMin
+     */
+    public function getSpreadMin()
+    {
+        return $this->spreadMin;
+    }
+
+    /**
+     * @param $spreadMin
+     */
+    public function setSpreadMin($spreadMin)
+    {
+        $this->spreadMin = $spreadMin;
+    }
+
+    /**
+     * @return $spreadMax
+     */
+    public function getSpreadMax()
+    {
+        return $this->spreadMax;
+    }
+
+    /**
+     * @param $spreadMax
+     */
+    public function setSpreadMax($spreadMax)
+    {
+        $this->spreadMax = $spreadMax;
+    }
+
+    /**
+     * @return $excludeCoins
+     */
+    public function getExcludeCoins()
+    {
+        return $this->excludeCoins;
+    }
+
+    /**
+     * @param $excludeCoins
+     */
+    public function setExcludeCoins($excludeCoins)
+    {
+        $this->excludeCoins = $excludeCoins;
+    }
+
+    /**
+     * @return $minUSDCost
+     */
+    public function getMinUSDCost()
+    {
+        return $this->minUSDCost;
+    }
+
+    /**
+     * @param $minUSDCost
+     */
+    public function setMinUSDCost($minUSDCost)
+    {
+        $this->minUSDCost = $minUSDCost;
+    }
+
+    /**
+     * @return $maxUSDCost
+     */
+    public function getMaxUSDCost()
+    {
+        return $this->maxUSDCost;
+    }
+
+    /**
+     * @param $maxUSDCost
+     */
+    public function setMaxUSDCost($maxUSDCost)
+    {
+        $this->maxUSDCost = $maxUSDCost;
+    }
+
+    /**
+     * @return $percentChangeMax
+     */
+    public function getPercentChangeMax()
+    {
+        return $this->percentChangeMax;
+    }
+
+    /**
+     * @param $percentChangeMax
+     */
+    public function setPercentChangeMax($percentChangeMax)
+    {
+        $this->percentChangeMax = $percentChangeMax;
+    }
+
+    /**
+     * @return $percentChangeMin
+     */
+    public function getPercentChangeMin()
+    {
+        return $this->percentChangeMin;
+    }
+
+    /**
+     * @param $percentChangeMin
+     */
+    public function setPercentChangeMin($percentChangeMin)
+    {
+        $this->percentChangeMin = $percentChangeMin;
+    }
+
+    /**
+     * @return $profitUSDAmount
+     */
+    public function getProfitUSDAmount()
+    {
+        return $this->profitUSDAmount;
+    }
+
+    /**
+     * @param $profitUSDAmount
+     */
+    public function setProfitUSDAmount($profitUSDAmount)
+    {
+        $this->profitUSDAmount = $profitUSDAmount;
+    }
+
+    /**
+     * @return $profitBTCAmount
+     */
+    public function getProfitBTCAmount()
+    {
+        return $this->profitBTCAmount;
+    }
+
+    /**
+     * @param $profitBTCAmount
+     */
+    public function setProfitBTCAmount($profitBTCAmount)
+    {
+        $this->profitBTCAmount = $profitBTCAmount;
+    }
+
+    /**
+     * @return $profitPercent
+     */
+    public function getProfitPercent()
+    {
+        return $this->profitPercent;
+    }
+
+    /**
+     * @param $profitPercent
+     */
+    public function setProfitPercent($profitPercent)
+    {
+        $this->profitPercent = $profitPercent;
+    }
+
+    /**
+     * @return $upTime
+     */
+    public function getUpTime()
+    {
+        return $this->upTime;
+    }
+
+    /**
+     * @param $upTime
+     */
+    public function setUpTime($upTime)
+    {
+        $this->upTime = $upTime;
+    }
+
+    /**
+     * @return $startTime
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
+
+    /**
+     * @param $startTime
+     */
+    public function setStartTime($startTime)
+    {
+        $this->startTime = $startTime;
+    }
+
+    /**
+     * @return $name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return $startingBalanceUSD
+     */
+    public function getStartingBalanceUSD()
+    {
+        return $this->startingBalanceUSD;
+    }
+
+    /**
+     * @param $startingBalanceUSD
+     */
+    public function setStartingBalanceUSD($startingBalanceUSD)
+    {
+        $this->startingBalanceUSD = $startingBalanceUSD;
+    }
+
+    /**
+     * @return $currentBalanceUSD
+     */
+    public function getCurrentBalanceUSD()
+    {
+        return $this->currentBalanceUSD;
+    }
+
+    /**
+     * @param $currentBalanceUSD
+     */
+    public function setCurrentBalanceUSD($currentBalanceUSD)
+    {
+        $this->currentBalanceUSD = $currentBalanceUSD;
+    }
+
+    /**
+     * @return $currentBalanceBTC
+     */
+    public function getCurrentBalanceBTC()
+    {
+        return $this->currentBalanceBTC;
+    }
+
+    /**
+     * @param $currentBalanceBTC
+     */
+    public function setCurrentBalanceBTC($currentBalanceBTC)
+    {
+        $this->currentBalanceBTC = $currentBalanceBTC;
+    }
+
+    /**
+     * @return $coinsToTrade:
+     */
+    public function getCoinsToTrade()
+    {
+        return $this->coinsToTrade;
+    }
+
+    /**
+     * @param $coinsToTrade
+     */
+    public function setCoinsToTrade($coinsToTrade)
+    {
+        $this->coinsToTrade = $coinsToTrade;
+    }
+
+    /**
+     * @return $coinsInBuyOrderList
+     */
+    public function getCoinsInBuyOrderList()
+    {
+        return $this->coinsInBuyOrderList;
+    }
+
+    /**
+     * @param $coinsInBuyOrderList
+     */
+    public function setCoinsInBuyOrderList($coinsInBuyOrderList)
+    {
+        $this->coinsInBuyOrderList = $coinsInBuyOrderList;
+    }
+
+    /**
+     * @return $coinsInSellOrderList
+     */
+    public function getCoinsInSellOrderList()
+    {
+        return $this->coinsInSellOrderList;
+    }
+
+    /**
+     * @param $coinsInSellOrderList
+     */
+    public function setCoinsInSellOrderList($coinsInSellOrderList)
+    {
+        $this->coinsInSellOrderList = $coinsInSellOrderList;
+    }
+
+    /**
+     * @return $buyOrderList
+     */
+    public function getBuyOrderList()
+    {
+        return $this->buyOrderList;
+    }
+
+    /**
+     * @param $buyOrderList
+     */
+    public function setBuyOrderList($buyOrderList)
+    {
+        $this->buyOrderList = $buyOrderList;
+    }
+
+    /**
+     * @return $sellOrderList
+     */
+    public function getSellOrderList()
+    {
+        return $this->sellOrderList;
+    }
+
+    /**
+     * @param $sellOrderList
+     */
+    public function setSellOrderList($sellOrderList)
+    {
+        $this->sellOrderList = $sellOrderList;
+    }
+
+    /**
+     * @return $pendingBuyOrderList
+     */
+    public function getPendingBuyOrderList()
+    {
+        return $this->pendingBuyOrderList;
+    }
+
+    /**
+     * @param $pendingBuyOrderList
+     */
+    public function setPendingBuyOrderList($pendingBuyOrderList)
+    {
+        $this->pendingBuyOrderList = $pendingBuyOrderList;
+    }
+
+    /**
+     * @return $pendingSellOrderList
+     */
+    public function getPendingSellOrderList()
+    {
+        return $this->pendingSellOrderList;
+    }
+
+    /**
+     * @param $pendingSellOrderList
+     */
+    public function setPendingSellOrderList($pendingSellOrderList)
+    {
+        $this->pendingSellOrderList = $pendingSellOrderList;
+    }
+
     function isUpTrend($marketHistory){
         $isUpTrend = false;
         

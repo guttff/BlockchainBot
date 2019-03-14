@@ -17,7 +17,9 @@ class MovingAverage extends JsonBase
     #	a = smoothing factor = 2 / (1 + N)
     # 	N = number of time periods
     #	use SMA when previous EMA is unknown
+    
     private $sma;
+    private $previousEMA;
     private $N_timePeriods;
     private $a_smoothingfactor;
     private $P_currPrice;

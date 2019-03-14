@@ -67,7 +67,78 @@ marketHistory = {
 
 #	-------------------------------
 
-public void main(String[] args){
+
+public static void main(String[] args){
+
+	botManagerThread(); // spin up new bot
+	buildCoinToTradeThread();
+	buyCoinToTradeThread();
+	sellCoinToTradeThread();
+
+}
+
+
+#	-------------------------------
+
+
+public botManagerThread(){
+
+	$totalProfitUSD		= 0;
+	$profitPercent		= 0;
+	$startingBalanceUSD	= 0;
+	$currentBalanceUSD	= 0;
+	$upTime				= 0;
+	$totalDeficitUSD	= 0;
+	$startTime			= now();
+	$botsArray      	= Array();
+	$profitBotsArray  	= Array();
+	$deficitBotsArray  	= Array();
+	$coinsToTradeArray 	= Array();
+}
+
+
+#	-------------------------------
+
+public	Bot(){
+
+
+    private $limit;
+    private $limitStart;
+    private $aggression;
+    private $spreadMin;
+    private $spreadMax;
+    private $excludeCoins;
+    private $minUSDCost;
+    private $maxUSDCost;
+    private $percentChangeMax;
+    private $percentChangeMin;
+    private $profitUSDAmount;
+    private $profitBTCAmount;
+    private $profitPercent;
+    
+	private $upTime;
+	private $startTime;
+	private $name;
+	private $startingBalanceUSD;
+	private $currentBalanceUSD;
+	private $currentBalanceBTC;
+	
+    private $coinsToTrade = Array(); // ['BTC-XRP', 'BTC-XLM']
+    private $coinsInBuyOrderList = Array(); // ['BTC-XRP', 'BTC-XLM']
+    private $coinsInSellOrderList = Array(); // ['BTC-XRP', 'BTC-XLM']
+    private $buyOrderList = Array(); // an array of buy order coin list
+    private $sellOrderList = Array(); // an array of sell order coin list
+    private $pendingBuyOrderList = Array(); // an array of open buy order
+    private $pendingSellOrderList = Array(); // an array of open sell order
+    
+	
+
+}
+
+#	-------------------------------
+
+
+public static void main(String[] args){
 	$order = new Order();
 	$order->getQuantity();
 	
