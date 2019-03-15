@@ -2,10 +2,14 @@
 
 
 use Strategy\Strategy;
+use Factory\OrderBookFactory;
+use Factory\OrderBooksFactory;
 
 require_once 'config/BittrexProperties.php';
 require_once 'Exchange/Bittrex/BittrexHelper.php';
 require_once 'Exchange/Bittrex/BittrexTicker.php';
+require_once 'Factory/OrderBookFactory.php';
+require_once 'Factory/OrderBooksFactory.php';
 require_once 'Interface/Strategy.php';
 require_once "Model/JsonBase.php";
 require_once "Model/JsonParser.php";
@@ -75,7 +79,7 @@ Class MarketMaker extends JsonBase implements Strategy{
         $bittrexHelper  = new BittrexHelper();
         $bittrexTicker  = new BittrexTicker();
         $smallestSpread = new Spread();
-        $orderBooks     = new OrderBooks();
+        $orderBooks     = OrderBooksFactory::create();
         $coinMarketCap  = new CoinMarketCap($this->limit, $this->limitStart, 'USD');
         
 //         echo "<pre>";
@@ -146,9 +150,11 @@ Class MarketMaker extends JsonBase implements Strategy{
                 
                 $buyOrderBook = $bittrexHelper->getBittrexOrderBook($bittrexProp->getBittrexOrderBookURL(), $market, 'buy');
                 
-                $orderBook = new OrderBook($buyOrderBook);
+                $orderBook = OrderBookFactory::create();
+                $orderBook->computeOrderBook($buyOrderBook);
                 $orderBook->setMarket($market);
                 $orderBook->setType('buy');
+                
                 $orderBooks->add($orderBook);
                 
                 

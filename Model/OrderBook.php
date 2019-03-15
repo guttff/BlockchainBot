@@ -18,18 +18,20 @@ class OrderBook extends JsonBase
     private $orderBookMinimum;
     private $orderBookMaximum;
     
-    function __construct($odrBk){
+    function __construct(){
         $this->orderBook = array();
-        
-        $this->setOrderBook($odrBk);
-        
     }
     
     public function expose() {
         return get_object_vars($this);
     }
     
-    private function setOrderBook($odrBk){
+    
+    public function setOrderBook($odrBk){
+        $this->orderBook = $odrBk;
+    }
+    
+    public function computeOrderBook($odrBk){
         
         $quantityTotal  = 0;
         $rateTotal      = 0;

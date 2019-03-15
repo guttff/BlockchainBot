@@ -1,5 +1,6 @@
 <?php
 use Container\Container;
+use Factory\OrderBookFactory;
 
 require_once 'Interface/Container.php';
 require_once 'Model/JsonBase.php';
@@ -28,9 +29,14 @@ class OrderBooks extends JsonBase implements Container
     public function getIndex(String $name) {
         
         for($i=0;$i<count($this->getOrderBooks());$i++){
-            $o = $this->getItem($i);
+            $o = OrderBookFactory::create();
+            $o->setOrderBook($this->getItem($i));
             
+            if($o->getMarket() == $name)
+                return $i;
         }
+        
+        return null;
         
     }
     
