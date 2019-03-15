@@ -1,7 +1,7 @@
 <?php
 // include "BaseOrder.php";
 
-require_once "Utils/BaseOrder.php";
+require_once "Model/BaseOrder.php";
 
 class Order extends BaseOrder
 {

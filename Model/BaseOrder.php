@@ -1,7 +1,7 @@
 <?php
 // namespace Order;
 
-require_once "Utils/JsonBase.php";
+require_once "Model/JsonBase.php";
 
 class BaseOrder extends JsonBase
 {

@@ -4,19 +4,19 @@
 use Strategy\Strategy;
 
 require_once 'config/BittrexProperties.php';
-require_once 'Bittrex/BittrexHelper.php';
-require_once 'Bittrex/BittrexTicker.php';
+require_once 'Exchange/Bittrex/BittrexHelper.php';
+require_once 'Exchange/Bittrex/BittrexTicker.php';
+require_once 'Interface/Strategy.php';
+require_once "Model/JsonBase.php";
+require_once "Model/JsonParser.php";
+require_once 'Model/OrderBook.php';
+require_once 'Model/Spread.php';
+require_once 'ModelContainer/OrderBooks.php';
 require_once 'Utils/CoinMarketCap.php';
-require_once 'Utils/Compare.php';
 require_once 'Utils/Logger.php';
-require_once 'Utils/OrderBook.php';
-require_once 'Utils/SmallestSpread.php';
-
-require_once "Utils/JsonBase.php";
-require_once "Utils/JsonParser.php";
 require_once "UtilsHelpers/MarketHistoryContainer.php";
 require_once 'Strategy/MarketMaker.php';
-require_once "Strategy/Strategy.php";
+require_once 'Tools/Compare.php';
 
 Class MarketMaker extends JsonBase implements Strategy{
     
@@ -74,7 +74,8 @@ Class MarketMaker extends JsonBase implements Strategy{
         $bittrexProp    = new BittrexProperties();
         $bittrexHelper  = new BittrexHelper();
         $bittrexTicker  = new BittrexTicker();
-        $smallestSpread = new SmallestSpread();
+        $smallestSpread = new Spread();
+        $orderBooks     = new OrderBooks();
         $coinMarketCap  = new CoinMarketCap($this->limit, $this->limitStart, 'USD');
         
 //         echo "<pre>";
@@ -146,6 +147,10 @@ Class MarketMaker extends JsonBase implements Strategy{
                 $buyOrderBook = $bittrexHelper->getBittrexOrderBook($bittrexProp->getBittrexOrderBookURL(), $market, 'buy');
                 
                 $orderBook = new OrderBook($buyOrderBook);
+                $orderBook->setMarket($market);
+                $orderBook->setType('buy');
+                $orderBooks->add($orderBook);
+                
                 
                 $marketHistory = $bittrexHelper->getBittrexMarketHistory($bittrexProp->getBittrexMarketHistoryURL(), $market);
                 
@@ -168,9 +173,9 @@ Class MarketMaker extends JsonBase implements Strategy{
 //                 echo $marketHistoryContainer->toJSON();
                 
                 
-                echo '$marketHistoryContainer getMarketHistory for market :' .$market . '<br/>';
-                echo JsonParser::toJSON($marketHistoryContainer->getMarketHistory());
-                echo "<br/>";
+//                 echo '$marketHistoryContainer getMarketHistory for market :' .$market . '<br/>';
+//                 echo JsonParser::toJSON($marketHistoryContainer->getMarketHistory());
+//                 echo "<br/>";
                 echo '$marketHistoryContainer Mean for market :' .$market . '<br/>';
                 echo $marketHistoryContainer->getMarketHistoryMean()->toJSON();
                 echo "<br/>";

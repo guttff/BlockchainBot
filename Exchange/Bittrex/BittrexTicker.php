@@ -4,7 +4,7 @@
 
 // use JsonBase;
 
-require_once "Utils/JsonBase.php";
+require_once "Model/JsonBase.php";
 
 class BittrexTicker extends JsonBase
 {
@@ -17,7 +17,7 @@ class BittrexTicker extends JsonBase
     }
     
     /**
-     * @return mixed
+     * @return $Bid
      */
     public function getBid()
     {
@@ -25,7 +25,7 @@ class BittrexTicker extends JsonBase
     }
 
     /**
-     * @param mixed $Bid
+     * @param $Bid
      */
     public function setBid($Bid)
     {
@@ -33,7 +33,7 @@ class BittrexTicker extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $Ask
      */
     public function getAsk()
     {
@@ -41,7 +41,7 @@ class BittrexTicker extends JsonBase
     }
 
     /**
-     * @param mixed $Ask
+     * @param $Ask
      */
     public function setAsk($Ask)
     {
@@ -49,7 +49,7 @@ class BittrexTicker extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $Last
      */
     public function getLast()
     {
@@ -57,7 +57,7 @@ class BittrexTicker extends JsonBase
     }
 
     /**
-     * @param mixed $Last
+     * @param $Last
      */
     public function setLast($Last)
     {

@@ -1,7 +1,7 @@
 <?php
 // namespace Utils;
 
-require_once "Utils/JsonBase.php";
+require_once "Model/JsonBase.php";
 
 class MarketHistory extends JsonBase
 {
@@ -15,7 +15,7 @@ class MarketHistory extends JsonBase
     
     
     /**
-     * @return mixed
+     * @return $Id
      */
     public function getId()
     {
@@ -23,7 +23,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $TimeStamp
      */
     public function getTimeStamp()
     {
@@ -31,7 +31,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $Quantity
      */
     public function getQuantity()
     {
@@ -39,7 +39,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $Price
      */
     public function getPrice()
     {
@@ -47,7 +47,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $Total
      */
     public function getTotal()
     {
@@ -55,7 +55,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @param mixed $Total
+     * @param $Total
      */
     public function setTotal($Total)
     {
@@ -63,7 +63,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $FillType
      */
     public function getFillType()
     {
@@ -71,7 +71,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $OrderType
      */
     public function getOrderType()
     {
@@ -79,7 +79,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @param mixed $Id
+     * @param $Id
      */
     public function setId($Id)
     {
@@ -87,7 +87,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @param mixed $TimeStamp
+     * @param $TimeStamp
      */
     public function setTimeStamp($TimeStamp)
     {
@@ -95,7 +95,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @param mixed $Quantity
+     * @param $Quantity
      */
     public function setQuantity($Quantity)
     {
@@ -103,7 +103,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @param mixed $Price
+     * @param $Price
      */
     public function setPrice($Price)
     {
@@ -111,7 +111,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @param mixed $FillType
+     * @param $FillType
      */
     public function setFillType($FillType)
     {
@@ -119,7 +119,7 @@ class MarketHistory extends JsonBase
     }
 
     /**
-     * @param mixed $OrderType
+     * @param $OrderType
      */
     public function setOrderType($OrderType)
     {

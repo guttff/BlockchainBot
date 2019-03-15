@@ -2,8 +2,8 @@
 // namespace UtilsHelpers;
 
 
-require_once "Utils/JsonBase.php";
-require_once "Utils/MarketHistory.php";
+require_once "Model/JsonBase.php";
+require_once "Model/MarketHistory.php";
 
 class MarketHistoryContainer extends JsonBase
 {

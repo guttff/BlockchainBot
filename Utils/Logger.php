@@ -9,7 +9,7 @@ Class Logger{
         $this->logFile = fopen('Logs/LogData_'. '20'. date("y_m_d"). '.txt', 'a');
     }
     
-    function add($data){
+    function appendLine($data){
         fwrite($this->logFile, $data ."\n");
     }
     

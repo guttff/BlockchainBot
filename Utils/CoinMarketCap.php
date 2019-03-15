@@ -4,7 +4,7 @@
 // use JsonBase;
 use config\CoinMarketCapProperties;
 
-require_once "Utils/JsonBase.php";
+require_once "Model/JsonBase.php";
 require_once "config/CoinMarketCapProperties.php";
 
 class CoinMarketCap extends JsonBase

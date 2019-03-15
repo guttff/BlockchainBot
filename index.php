@@ -11,8 +11,8 @@
 // use SmallestSpread;
 
 // include 'config/BittrexProperties.php';
-// include 'Bittrex/BittrexHelper.php';
-// include 'Bittrex/BittrexTicker.php';
+// include 'Exchange/Bittrex/BittrexHelper.php';
+// include 'Exchange/Bittrex/BittrexTicker.php';
 include 'Strategy/MarketMaker.php';
 // include 'Utils/CoinMarketCap.php';
 // include 'Utils/Logger.php';

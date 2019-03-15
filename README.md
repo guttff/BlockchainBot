@@ -48,7 +48,7 @@ marketHistory = {
 #	getBuyOrderWall()
 #	getSellOrderWall()
 
-# 	getsimpleMovingAverage()
+# 	getSimpleMovingAverage()
 #	getExponentialMovingAverage()
 
 #	-------------------------------
@@ -208,13 +208,16 @@ class MovingAverage extends JsonBase{
     # 	N = number of time periods
     #	use SMA when previous EMA is unknown
     
-    private $sma;
+    private $SMA;
+    private $EMA;
     private $previousEMA;
     private $N_timePeriods;
     private $a_smoothingfactor;
     private $P_currPrice;
+    private $marketHistory;
+    private $runningTotal;
     
- 	getsimpleMovingAverage()
+ 	getSimpleMovingAverage()
 	getExponentialMovingAverage()
 
 }

@@ -2,13 +2,15 @@
 // namespace OrderBook;
 
 // use JsonBase;
-require_once "Utils/JsonBase.php";
-require_once "Utils/BaseOrder.php";
+require_once "Model/JsonBase.php";
+require_once "Model/BaseOrder.php";
 
 // use Order;
 
 class OrderBook extends JsonBase
 {
+    private $market;
+    private $type;
     private $orderBook;
     private $orderBookMean;
     private $orderBookMedian;
@@ -126,6 +128,38 @@ class OrderBook extends JsonBase
     
     
     
+    /**
+     * @return $market
+     */
+    public function getMarket()
+    {
+        return $this->market;
+    }
+
+    /**
+     * @param $market
+     */
+    public function setMarket($market)
+    {
+        $this->market = $market;
+    }
+
+    /**
+     * @return $type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
     /**
      * @return mixed
      */

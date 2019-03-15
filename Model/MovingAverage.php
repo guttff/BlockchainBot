@@ -1,7 +1,7 @@
 <?php
 // namespace Design;
 
-require_once "Utils/JsonBase.php";
+require_once "Model/JsonBase.php";
 
 class MovingAverage extends JsonBase
 {
@@ -18,11 +18,15 @@ class MovingAverage extends JsonBase
     # 	N = number of time periods
     #	use SMA when previous EMA is unknown
     
-    private $sma;
+    private $SMA;
+    private $EMA;
     private $previousEMA;
     private $N_timePeriods;
     private $a_smoothingfactor;
     private $P_currPrice;
+    private $marketHistory;
+    private $runningTotal;
+    
     
     
     public function expose() {

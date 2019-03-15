@@ -2,10 +2,10 @@
 // namespace SmallestSpread;
 
 // use JsonBase;
-require_once "Utils/JsonBase.php";
+require_once "Model/JsonBase.php";
 
 
-class SmallestSpread extends JsonBase
+class Spread extends JsonBase
 {
     private $spreadPercent;
     private $market;
@@ -18,7 +18,7 @@ class SmallestSpread extends JsonBase
     }
     
     /**
-     * @return mixed
+     * @return $spreadPercent
      */
     public function getSpreadPercent()
     {
@@ -26,7 +26,7 @@ class SmallestSpread extends JsonBase
     }
 
     /**
-     * @param mixed $spreadPercent
+     * @param $spreadPercent
      */
     public function setSpreadPercent($spreadPercent)
     {
@@ -34,7 +34,7 @@ class SmallestSpread extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $market
      */
     public function getMarket()
     {
@@ -42,7 +42,7 @@ class SmallestSpread extends JsonBase
     }
 
     /**
-     * @param mixed $market
+     * @param $market
      */
     public function setMarket($market)
     {
@@ -50,7 +50,7 @@ class SmallestSpread extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $symbol
      */
     public function getSymbol()
     {
@@ -58,7 +58,7 @@ class SmallestSpread extends JsonBase
     }
 
     /**
-     * @param mixed $symbol
+     * @param $symbol
      */
     public function setSymbol($symbol)
     {
@@ -66,7 +66,7 @@ class SmallestSpread extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $cost_USD
      */
     public function getCost_USD()
     {
@@ -74,7 +74,7 @@ class SmallestSpread extends JsonBase
     }
 
     /**
-     * @param mixed $cost_USD
+     * @param $cost_USD
      */
     public function setCost_USD($cost_USD)
     {
@@ -82,7 +82,7 @@ class SmallestSpread extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return $cost_BTC
      */
     public function getCost_BTC()
     {
@@ -90,7 +90,7 @@ class SmallestSpread extends JsonBase
     }
 
     /**
-     * @param mixed $cost_BTC
+     * @param $cost_BTC
      */
     public function setCost_BTC($cost_BTC)
     {
