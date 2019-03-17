@@ -9,6 +9,7 @@ use Exchange\Bittrex\BittrexTicker;
 use Factory\CompareFactory;
 use Factory\MarketHistoryContainerFactory;
 use Factory\MarketHistoryFactory;
+use Factory\MovingAverageContainerFactory;
 use Factory\OrderBookFactory;
 use Factory\OrderBookContainerFactory;
 use Interfaces\Strategy;
@@ -91,11 +92,13 @@ Class MarketMaker extends JsonBase implements Strategy{
     public function run() {
         
         $compare        = CompareFactory::create();
+        $movingAverages = MovingAverageContainerFactory::create();
         $bittrexProp    = new BittrexProperties();
         $bittrexHelper  = new BittrexHelper();
         $bittrexTicker  = new BittrexTicker();
         $smallestSpread = new Spread();
         $orderBooks     = OrderBookContainerFactory::create();
+        $marketHistories = MarketHistoryContainerFactory::create();
         $coinMarketCap  = new CoinMarketCap($this->limit, $this->limitStart, 'USD');
         
 //         echo "<pre>";
@@ -174,6 +177,7 @@ Class MarketMaker extends JsonBase implements Strategy{
                 $orderBooks->add($ob);
                 
                 
+                
                 $marketHistory = $bittrexHelper->getBittrexMarketHistory($bittrexProp->getBittrexMarketHistoryURL(), $market);
                 
 //                 echo var_dump($marketHistory);
@@ -182,8 +186,7 @@ Class MarketMaker extends JsonBase implements Strategy{
                 $mh->setMarket($market);
                 $mh->build($marketHistory);
                 
-                $marketHistoryContainer = MarketHistoryContainerFactory::create();
-                $marketHistoryContainer->add($mh);
+                $marketHistories->add($mh);
                 
                 echo "<br/>";
                 
