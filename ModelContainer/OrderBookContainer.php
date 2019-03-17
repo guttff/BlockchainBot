@@ -2,7 +2,6 @@
 namespace ModelContainer;
 
 use Model\JsonBase;
-use Model\OrderBook;
 use Interfaces\Container;
 use Factory\OrderBookFactory;
 
@@ -10,7 +9,7 @@ use Factory\OrderBookFactory;
 // require_once 'Model/JsonBase.php';
 // require_once 'Model/OrderBook.php';
 
-class OrderBooks extends JsonBase implements Container
+class OrderBookContainer extends JsonBase implements Container
 {
     private $orderBooks;
     

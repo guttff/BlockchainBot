@@ -8,14 +8,14 @@ use Factory\TradeFactory;
 class MarketHistory extends JsonBase
 {
     
-    private $market;
-    private $marketHistory;
-    private $marketHistoryMean;
-    private $marketHistoryMedian;
-    private $marketHistoryMode;
-    private $marketHistoryMinimum;
-    private $marketHistoryMaximum;
-    private $totalItems;
+    public $market;
+    public $marketHistory;
+    public $marketHistoryMean;
+    public $marketHistoryMedian;
+    public $marketHistoryMode;
+    public $marketHistoryMinimum;
+    public $marketHistoryMaximum;
+    public $totalItems;
     
     
     
@@ -32,7 +32,7 @@ class MarketHistory extends JsonBase
         $this->marketHistory = $mrktHistory;
     }
     
-    public function computeMarketHistory($mrktHistory){
+    public function build($mrktHistory){
         
         $quantityTotal  = 0;
         $priceTotal      = 0;

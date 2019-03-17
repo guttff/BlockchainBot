@@ -1,14 +1,14 @@
 <?php
 namespace Factory;
 
-use ModelContainer\OrderBooks;
+use ModelContainer\OrderBookContainer;
 
 // require_once 'ModelContainer/OrderBooks.php';
 
-class OrderBooksFactory
+class OrderBookContainerFactory
 {
     public static function create() {
-        return new OrderBooks();
+        return new OrderBookContainer();
     }
 }
 

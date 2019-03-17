@@ -3,13 +3,13 @@ namespace Model;
 
 class Trade extends JsonBase
 {
-    private $Id;
-    private $TimeStamp;
-    private $Quantity;
-    private $Price;
-    private $Total;
-    private $FillType;
-    private $OrderType;
+    public $Id;
+    public $TimeStamp;
+    public $Quantity;
+    public $Price;
+    public $Total;
+    public $FillType;
+    public $OrderType;
     
     
     

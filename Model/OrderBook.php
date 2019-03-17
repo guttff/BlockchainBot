@@ -29,7 +29,7 @@ class OrderBook extends JsonBase
         $this->orderBook = $odrBk;
     }
     
-    public function computeOrderBook($odrBk){
+    public function build($odrBk){
         
         $quantityTotal  = 0;
         $rateTotal      = 0;

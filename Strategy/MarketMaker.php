@@ -7,15 +7,16 @@ namespace Strategy;
 use Exchange\Bittrex\BittrexHelper;
 use Exchange\Bittrex\BittrexTicker;
 use Factory\CompareFactory;
+use Factory\MarketHistoryContainerFactory;
+use Factory\MarketHistoryFactory;
 use Factory\OrderBookFactory;
-use Factory\OrderBooksFactory;
+use Factory\OrderBookContainerFactory;
 use Interfaces\Strategy;
 use Model\JsonBase;
+use Model\JsonParser;
 use Model\Spread;
 use Utils\CoinMarketCap;
 use config\BittrexProperties;
-use Factory\MarketHistoryContainerFactory;
-use Factory\MarketHistoryFactory;
 
 
 
@@ -94,7 +95,7 @@ Class MarketMaker extends JsonBase implements Strategy{
         $bittrexHelper  = new BittrexHelper();
         $bittrexTicker  = new BittrexTicker();
         $smallestSpread = new Spread();
-        $orderBooks     = OrderBooksFactory::create();
+        $orderBooks     = OrderBookContainerFactory::create();
         $coinMarketCap  = new CoinMarketCap($this->limit, $this->limitStart, 'USD');
         
 //         echo "<pre>";
@@ -165,12 +166,12 @@ Class MarketMaker extends JsonBase implements Strategy{
                 
                 $buyOrderBook = $bittrexHelper->getBittrexOrderBook($bittrexProp->getBittrexOrderBookURL(), $market, 'buy');
                 
-                $orderBook = OrderBookFactory::create();
-                $orderBook->computeOrderBook($buyOrderBook);
-                $orderBook->setMarket($market);
-                $orderBook->setType('buy');
+                $ob = OrderBookFactory::create();
+                $ob->build($buyOrderBook);
+                $ob->setMarket($market);
+                $ob->setType('buy');
                 
-                $orderBooks->add($orderBook);
+                $orderBooks->add($ob);
                 
                 
                 $marketHistory = $bittrexHelper->getBittrexMarketHistory($bittrexProp->getBittrexMarketHistoryURL(), $market);
@@ -179,7 +180,7 @@ Class MarketMaker extends JsonBase implements Strategy{
                 
                 $mh = MarketHistoryFactory::create();
                 $mh->setMarket($market);
-                $mh->computeMarketHistory($marketHistory);
+                $mh->build($marketHistory);
                 
                 $marketHistoryContainer = MarketHistoryContainerFactory::create();
                 $marketHistoryContainer->add($mh);
@@ -188,10 +189,10 @@ Class MarketMaker extends JsonBase implements Strategy{
                 
                 echo "<pre>";
                 echo '$buyOrderBook Mean for market :' .$market . '<br/>';
-                echo $orderBook->getOrderBookMean()->toJSON();
+                echo $ob->getOrderBookMean()->toJSON();
                 echo "<br/>";
                 echo '$buyOrderBook median for market :' .$market . '<br/>';
-                echo $orderBook->getOrderBookMedian()->toJSON();
+                echo $ob->getOrderBookMedian()->toJSON();
                 echo "<br/>";
                 
 //                 echo var_dump($marketHistoryContainer->getMarketHistory());
@@ -199,8 +200,8 @@ Class MarketMaker extends JsonBase implements Strategy{
 //                 echo $marketHistoryContainer->toJSON();
                 
                 
-//                 echo '$marketHistoryContainer getMarketHistory for market :' .$market . '<br/>';
-//                 echo JsonParser::toJSON($marketHistoryContainer->getMarketHistory());
+//                 echo '$marketHistoryContainer getMarketHistories for market :' .$market . '<br/>';
+//                 echo JsonParser::toJSON($marketHistoryContainer->getMarketHistories());
 //                 echo "<br/>";
                 echo '$marketHistory Mean for market :' .$market . '<br/>';
                 echo $mh->getMarketHistoryMean()->toJSON();

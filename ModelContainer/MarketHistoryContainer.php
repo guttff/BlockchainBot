@@ -10,11 +10,11 @@ use Factory\MarketHistoryFactory;
 
 class MarketHistoryContainer extends JsonBase implements Container
 {
-    private $marketHistory;
+    public $marketHistories;
     
     
     function __construct(){
-        $this->marketHistory = array();
+        $this->marketHistories = array();
     }
     
     public function expose() {
@@ -24,7 +24,7 @@ class MarketHistoryContainer extends JsonBase implements Container
     
     public function add($marketHistory)
     {
-        array_push($this->marketHistory,$marketHistory);
+        array_push($this->marketHistories,$marketHistory);
     }
     
     public function getIndex(String $name) {
@@ -43,27 +43,26 @@ class MarketHistoryContainer extends JsonBase implements Container
     
     public function getItem(Int $index)
     {
-        return $this->getMarketHistory()[$index];
+        return $this->marketHistories()[$index];
     }
-    
-    
     /**
-     * @return $marketHistory:
+     * @return mixed
      */
-    public function getMarketHistory()
+    public function getMarketHistories()
     {
-        return $this->marketHistory;
+        return $this->marketHistories;
+    }
+
+    /**
+     * @param mixed $marketHistories
+     */
+    public function setMarketHistories($marketHistories)
+    {
+        $this->marketHistories = $marketHistories;
     }
 
     
-    /**
-     * @param $marketHistory:
-     */
-    public function setMarketHistory($marketHistory)
-    {
-        $this->marketHistory = $marketHistory;
-    }
-
+    
     
     
     
