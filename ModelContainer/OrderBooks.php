@@ -2,6 +2,7 @@
 namespace ModelContainer;
 
 use Model\JsonBase;
+use Model\OrderBook;
 use Interfaces\Container;
 use Factory\OrderBookFactory;
 

@@ -1,19 +1,14 @@
 <?php
 namespace Model;
 
+use Factory\TradeFactory;
+
 // require_once "Model/JsonBase.php";
 
 class MarketHistory extends JsonBase
 {
-    public $Id;
-    public $TimeStamp;
-    public $Quantity;
-    public $Price;
-    public $Total;
-    public $FillType;
-    public $OrderType;
     
-    
+    private $market;
     private $marketHistory;
     private $marketHistoryMean;
     private $marketHistoryMedian;
@@ -33,11 +28,11 @@ class MarketHistory extends JsonBase
     }
     
     
-    private function setMarketHistory($mrktHistory){
+    public function setMarketHistory($mrktHistory){
         $this->marketHistory = $mrktHistory;
     }
     
-    private function computeMarketHistory($mrktHistory){
+    public function computeMarketHistory($mrktHistory){
         
         $quantityTotal  = 0;
         $priceTotal      = 0;
@@ -48,36 +43,35 @@ class MarketHistory extends JsonBase
         $quantityArray  = Array();
         
         foreach($mrktHistory as $item){
-            $marketHistory = new MarketHistory();
-            $marketHistory->setId($item['Id']);
-            $marketHistory->setTimeStamp($item['TimeStamp']);
-            $marketHistory->setQuantity($item['Quantity']);
-            $marketHistory->setPrice(number_format($item['Price'],8, ".", " "));
-            $marketHistory->setTotal($item['Total']);
-            $marketHistory->setFillType($item['FillType']);
-            $marketHistory->setOrderType($item['OrderType']);
-            array_push($this->marketHistory,$marketHistory);
+            $trade = TradeFactory::create();
+            $trade->setId($item['Id']);
+            $trade->setTimeStamp($item['TimeStamp']);
+            $trade->setQuantity($item['Quantity']);
+            $trade->setPrice(number_format($item['Price'],8, ".", " "));
+            $trade->setTotal($item['Total']);
+            $trade->setFillType($item['FillType']);
+            $trade->setOrderType($item['OrderType']);
+            array_push($this->marketHistory,$trade);
             
             
-            array_push($priceArray,$marketHistory->getPrice());
-            array_push($quantityArray,$marketHistory->getQuantity());
+            array_push($priceArray,$trade->getPrice());
+            array_push($quantityArray,$trade->getQuantity());
             
-            $quantityTotal  += $marketHistory->getQuantity();
-            $priceTotal      += $marketHistory->getPrice();
+            $quantityTotal  += $trade->getQuantity();
+            $priceTotal      += $trade->getPrice();
             
             if($totalItems == 0){
-                $this->setMarketHistoryMinimum($marketHistory);
-                $this->setMarketHistoryMaximum($marketHistory);
+                $this->setMarketHistoryMinimum($trade);
+                $this->setMarketHistoryMaximum($trade);
             }
             
-            if($this->getMarketHistoryMinimum()->getPrice() > $marketHistory->getPrice())
-                $this->setMarketHistoryMinimum($marketHistory);
+            if($this->getMarketHistoryMinimum()->getPrice() > $trade->getPrice())
+                $this->setMarketHistoryMinimum($trade);
                 
-                if($this->getMarketHistoryMaximum()->getPrice() < $marketHistory->getPrice())
-                    $this->setMarketHistoryMaximum($marketHistory);
-                    
-                    
-                    $totalItems++;
+            if($this->getMarketHistoryMaximum()->getPrice() < $trade->getPrice())
+                $this->setMarketHistoryMaximum($trade);
+            
+            $totalItems++;
         }
         
         
@@ -90,20 +84,20 @@ class MarketHistory extends JsonBase
     
     function calculateMean($priceTotal, $quantityTotal, $totalItems){
         
-        $marketHistory = new MarketHistory();
-        $marketHistory->setQuantity(number_format(($quantityTotal/$totalItems), 2, '.', ''));
-        $marketHistory->setPrice(number_format(($priceTotal/$totalItems),8, '.', ''));
+        $trade = TradeFactory::create();
+        $trade->setQuantity(number_format(($quantityTotal/$totalItems), 2, '.', ''));
+        $trade->setPrice(number_format(($priceTotal/$totalItems),8, '.', ''));
         
-        $this->marketHistoryMean = $marketHistory;
+        $this->marketHistoryMean = $trade;
     }
     
     function calculateMedian($priceArray, $quantityArray, $totalItems){
         
-        $marketHistory = new MarketHistory();
-        $marketHistory->setQuantity(number_format($this->median($totalItems, $quantityArray), 2, '.', ''));
-        $marketHistory->setPrice(number_format($this->median($totalItems, $priceArray),8, '.', ''));
+        $trade = TradeFactory::create();
+        $trade->setQuantity(number_format($this->median($totalItems, $quantityArray), 2, '.', ''));
+        $trade->setPrice(number_format($this->median($totalItems, $priceArray),8, '.', ''));
         
-        $this->marketHistoryMedian = $marketHistory;
+        $this->marketHistoryMedian = $trade;
     }
     
     /* TODO: */
@@ -113,20 +107,20 @@ class MarketHistory extends JsonBase
     
     function calculateMinimum($priceMin, $quantityMin){
         
-        $marketHistory = new MarketHistory();
-        $marketHistory->setQuantity(number_format($quantityMin, 2, '.', ''));
-        $marketHistory->setPrice(number_format($priceMin,8, '.', ''));
+        $trade = TradeFactory::create();
+        $trade->setQuantity(number_format($quantityMin, 2, '.', ''));
+        $trade->setPrice(number_format($priceMin,8, '.', ''));
         
-        $this->marketHistoryMinimum = $marketHistory;
+        $this->marketHistoryMinimum = $trade;
     }
     
     function calculateMaximum($priceMax, $quantityMax){
         
-        $marketHistory = new MarketHistory();
-        $marketHistory->setQuantity(number_format($quantityMax, 2, '.', ''));
-        $marketHistory->setPrice(number_format($priceMax,8, '.', ''));
+        $trade = TradeFactory::create();
+        $trade->setQuantity(number_format($quantityMax, 2, '.', ''));
+        $trade->setPrice(number_format($priceMax,8, '.', ''));
         
-        $this->marketHistoryMaximum = $marketHistory;
+        $this->marketHistoryMaximum = $trade;
     }
     
     
@@ -160,6 +154,22 @@ class MarketHistory extends JsonBase
     
     
     
+    /**
+     * @return $market
+     */
+    public function getMarket()
+    {
+        return $this->market;
+    }
+
+    /**
+     * @param $market
+     */
+    public function setMarket($market)
+    {
+        $this->market = $market;
+    }
+
     /**
      * @return $marketHistoryMean
      */
@@ -265,120 +275,6 @@ class MarketHistory extends JsonBase
     }
     
     
-    
-    
-    /**
-     * @return $Id
-     */
-    public function getId()
-    {
-        return $this->Id;
-    }
-
-    /**
-     * @return $TimeStamp
-     */
-    public function getTimeStamp()
-    {
-        return $this->TimeStamp;
-    }
-
-    /**
-     * @return $Quantity
-     */
-    public function getQuantity()
-    {
-        return $this->Quantity;
-    }
-
-    /**
-     * @return $Price
-     */
-    public function getPrice()
-    {
-        return $this->Price;
-    }
-
-    /**
-     * @return $Total
-     */
-    public function getTotal()
-    {
-        return $this->Total;
-    }
-
-    /**
-     * @param $Total
-     */
-    public function setTotal($Total)
-    {
-        $this->Total = $Total;
-    }
-
-    /**
-     * @return $FillType
-     */
-    public function getFillType()
-    {
-        return $this->FillType;
-    }
-
-    /**
-     * @return $OrderType
-     */
-    public function getOrderType()
-    {
-        return $this->OrderType;
-    }
-
-    /**
-     * @param $Id
-     */
-    public function setId($Id)
-    {
-        $this->Id = $Id;
-    }
-
-    /**
-     * @param $TimeStamp
-     */
-    public function setTimeStamp($TimeStamp)
-    {
-        $this->TimeStamp = $TimeStamp;
-    }
-
-    /**
-     * @param $Quantity
-     */
-    public function setQuantity($Quantity)
-    {
-        $this->Quantity = $Quantity;
-    }
-
-    /**
-     * @param $Price
-     */
-    public function setPrice($Price)
-    {
-        $this->Price = $Price;
-    }
-
-    /**
-     * @param $FillType
-     */
-    public function setFillType($FillType)
-    {
-        $this->FillType = $FillType;
-    }
-
-    /**
-     * @param $OrderType
-     */
-    public function setOrderType($OrderType)
-    {
-        $this->OrderType = $OrderType;
-    }
-
     
     
 }

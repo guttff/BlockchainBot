@@ -13,6 +13,10 @@ class BittrexTicker extends JsonBase
     private $Ask;
     private $Last;
     
+    public function __construct(){
+        
+    }
+    
     public function expose() {
         return get_object_vars($this);
     }

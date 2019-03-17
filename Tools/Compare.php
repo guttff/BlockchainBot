@@ -3,6 +3,10 @@ namespace Tools;
 
 class Compare
 {
+    public function __construct(){
+        
+    }
+    
     public function isGreatherOrEqual($a, $b){
         
         $a = (float) str_replace(',', '', $a);

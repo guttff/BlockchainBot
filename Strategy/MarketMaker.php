@@ -6,17 +6,16 @@ namespace Strategy;
 
 use Exchange\Bittrex\BittrexHelper;
 use Exchange\Bittrex\BittrexTicker;
-use config\BittrexProperties;
-use Interfaces\Strategy;
+use Factory\CompareFactory;
 use Factory\OrderBookFactory;
 use Factory\OrderBooksFactory;
+use Interfaces\Strategy;
 use Model\JsonBase;
-use Model\JsonParser;
 use Model\Spread;
-use ModelContainer\OrderBooks;
-use Tools\Compare;
 use Utils\CoinMarketCap;
-use UtilsHelpers\MarketHistoryContainer;
+use config\BittrexProperties;
+use Factory\MarketHistoryContainerFactory;
+use Factory\MarketHistoryFactory;
 
 
 
@@ -90,7 +89,7 @@ Class MarketMaker extends JsonBase implements Strategy{
     
     public function run() {
         
-        $compare        = new Compare();
+        $compare        = CompareFactory::create();
         $bittrexProp    = new BittrexProperties();
         $bittrexHelper  = new BittrexHelper();
         $bittrexTicker  = new BittrexTicker();
@@ -103,9 +102,9 @@ Class MarketMaker extends JsonBase implements Strategy{
 //         echo $coinMarketCap->toJSON();
 //         echo "</pre>";
         
-        
         $balance_BTC        = $bittrexHelper->getBittrexBalance($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexBalanceBTCURL());
 //         $balance_USD        = null;
+        
         foreach($coinMarketCap->getFgcData() as $data) {
             $coinMarketCap->setFgcDataQuotes($data['quote']);
 //             $coinMarketCap->setFgcDataQuotesBTC($coinMarketCap->getFgcDataQuotes()['BTC']);
@@ -178,7 +177,12 @@ Class MarketMaker extends JsonBase implements Strategy{
                 
 //                 echo var_dump($marketHistory);
                 
-                $marketHistoryContainer = new MarketHistoryContainer($marketHistory);
+                $mh = MarketHistoryFactory::create();
+                $mh->setMarket($market);
+                $mh->computeMarketHistory($marketHistory);
+                
+                $marketHistoryContainer = MarketHistoryContainerFactory::create();
+                $marketHistoryContainer->add($mh);
                 
                 echo "<br/>";
                 
@@ -198,17 +202,17 @@ Class MarketMaker extends JsonBase implements Strategy{
 //                 echo '$marketHistoryContainer getMarketHistory for market :' .$market . '<br/>';
 //                 echo JsonParser::toJSON($marketHistoryContainer->getMarketHistory());
 //                 echo "<br/>";
-                echo '$marketHistoryContainer Mean for market :' .$market . '<br/>';
-                echo $marketHistoryContainer->getMarketHistoryMean()->toJSON();
+                echo '$marketHistory Mean for market :' .$market . '<br/>';
+                echo $mh->getMarketHistoryMean()->toJSON();
                 echo "<br/>";
-                echo '$marketHistoryContainer median for market :' .$market . '<br/>';
-                echo $marketHistoryContainer->getMarketHistoryMedian()->toJSON();
+                echo '$marketHistory median for market :' .$market . '<br/>';
+                echo $mh->getMarketHistoryMedian()->toJSON();
                 echo "<br/>";
-                echo '$marketHistoryContainer minimum for market :' .$market . '<br/>';
-                echo $marketHistoryContainer->getMarketHistoryMinimum()->toJSON();
+                echo '$marketHistory minimum for market :' .$market . '<br/>';
+                echo $mh->getMarketHistoryMinimum()->toJSON();
                 echo "<br/>";
-                echo '$marketHistoryContainer maximum for market :' .$market . '<br/>';
-                echo $marketHistoryContainer->getMarketHistoryMaximum()->toJSON();
+                echo '$marketHistory maximum for market :' .$market . '<br/>';
+                echo $mh->getMarketHistoryMaximum()->toJSON();
                 echo "<br/>";
                 echo "-------------------------------------------------------";
                 echo "-------------------------------------------------------";

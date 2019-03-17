@@ -1,7 +1,14 @@
 <?php
 
+
+
 spl_autoload_register(function($className) {
-    include_once $_SERVER['DOCUMENT_ROOT'] . '/BlockchainBot/' . $className . '.php';
+//     $protocole = $_SERVER['REQUEST_SCHEME'].'://';
+//     $host = $_SERVER['HTTP_HOST'] . '/';
+
+    $projectName = explode('/', $_SERVER['REQUEST_URI'])[1];
+    
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/'. $projectName .'/' . $className . '.php';
 });
     
 

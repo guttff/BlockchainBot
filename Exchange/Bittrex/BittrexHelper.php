@@ -7,6 +7,10 @@ namespace Exchange\Bittrex;
 
 Class BittrexHelper{
     
+    public function __construct(){
+        
+    }
+    
     function cancelBittrexOrder($apisecret, $bittrex_cancel_order, $ORDER_UUID){
         
         $nonce=time();
