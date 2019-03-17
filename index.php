@@ -1,19 +1,23 @@
 <?php
 
+spl_autoload_register(function($className) {
+    include_once $_SERVER['DOCUMENT_ROOT'] . '/BlockchainBot/' . $className . '.php';
+});
+    
 
 // use BittrexHelper;
 // use BittrexProperties;
 // use BittrexTicker;
 // use CoinMarketCap;
 // use Logger;
-// use MarketMaker;
+use Strategy\MarketMaker;
 // use OrderBook;
 // use SmallestSpread;
 
 // include 'config/BittrexProperties.php';
 // include 'Exchange/Bittrex/BittrexHelper.php';
 // include 'Exchange/Bittrex/BittrexTicker.php';
-include 'Strategy/MarketMaker.php';
+// include 'Strategy/MarketMaker.php';
 // include 'Utils/CoinMarketCap.php';
 // include 'Utils/Logger.php';
 // include 'Utils/OrderBook.php';
@@ -25,15 +29,15 @@ ini_set('max_execution_time', 300);
     
     
     $marketMakerBot    = new MarketMaker(Array( 'limit'             => 5,
-                                                'limitStart'        => 1,
-                                                'aggression'        => 3,
-                                                'minUSDCost'        => 0.0001,
-                                                'maxUSDCost'        => 4,
-                                                'spreadMax'         => 7,
-                                                'spreadMin'         => 7,
-                                                'percentChangeMax'  => 40,
-                                                'percentChangeMin'  => -40,
-                                                'excludecoins'      => array('USDT', 'TUSD')
+                                                        'limitStart'        => 1,
+                                                        'aggression'        => 3,
+                                                        'minUSDCost'        => 0.0001,
+                                                        'maxUSDCost'        => 4,
+                                                        'spreadMax'         => 7,
+                                                        'spreadMin'         => 7,
+                                                        'percentChangeMax'  => 40,
+                                                        'percentChangeMin'  => -40,
+                                                        'excludecoins'      => array('USDT', 'TUSD')
                                         ));
     $marketMakerBot->run();
     

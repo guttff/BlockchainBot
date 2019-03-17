@@ -1,9 +1,9 @@
 <?php
 namespace Factory;
 
-use OrderBooks;
+use ModelContainer\OrderBooks;
 
-require_once 'ModelContainer/OrderBooks.php';
+// require_once 'ModelContainer/OrderBooks.php';
 
 class OrderBooksFactory
 {

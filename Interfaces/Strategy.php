@@ -1,5 +1,5 @@
 <?php
-namespace Strategy;
+namespace Interfaces;
 
 interface Strategy
 {

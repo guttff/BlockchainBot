@@ -1,11 +1,9 @@
 <?php
-// namespace OrderBook;
+namespace Model;
 
-// use JsonBase;
-require_once "Model/JsonBase.php";
-require_once "Model/BaseOrder.php";
+// require_once "Model/JsonBase.php";
+// require_once "Model/OrderBase.php";
 
-// use Order;
 
 class OrderBook extends JsonBase
 {
@@ -41,7 +39,7 @@ class OrderBook extends JsonBase
         $quantityArray  = Array();
         
         foreach($odrBk as $item){
-            $order = new BaseOrder();
+            $order = new OrderBase();
             $order->setQuantity($item['Quantity']);
             $order->setRate(number_format($item['Rate'],8, ".", " "));
             array_push($this->orderBook,$order);
@@ -79,7 +77,7 @@ class OrderBook extends JsonBase
     
     function calculateMean($rateTotal, $quantityTotal, $totalItems){
         
-        $order = new BaseOrder();
+        $order = new OrderBase();
         $order->setQuantity(number_format(($quantityTotal/$totalItems), 2, '.', ''));
         $order->setRate(number_format(($rateTotal/$totalItems),8, '.', ''));
         
@@ -88,7 +86,7 @@ class OrderBook extends JsonBase
     
     function calculateMedian($rateArray, $quantityArray, $totalItems){
         
-        $order = new BaseOrder();
+        $order = new OrderBase();
         $order->setQuantity(number_format($this->median($totalItems, $quantityArray), 2, '.', ''));
         $order->setRate(number_format($this->median($totalItems, $rateArray),8, '.', ''));
         
@@ -194,7 +192,7 @@ class OrderBook extends JsonBase
         return $this->orderBookMode;
     }
     /**
-     * @return BaseOrder
+     * @return OrderBase
      */
     public function getOrderBookMinimum()
     {
@@ -202,7 +200,7 @@ class OrderBook extends JsonBase
     }
 
     /**
-     * @param BaseOrder $orderBookMinimum
+     * @param OrderBase $orderBookMinimum
      */
     public function setOrderBookMinimum($orderBookMinimum)
     {
@@ -210,7 +208,7 @@ class OrderBook extends JsonBase
     }
 
     /**
-     * @return BaseOrder
+     * @return OrderBase
      */
     public function getOrderBookMaximum()
     {
@@ -218,7 +216,7 @@ class OrderBook extends JsonBase
     }
 
     /**
-     * @param BaseOrder $orderBookMaximum
+     * @param OrderBase $orderBookMaximum
      */
     public function setOrderBookMaximum($orderBookMaximum)
     {

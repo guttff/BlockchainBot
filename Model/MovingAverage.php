@@ -1,7 +1,7 @@
 <?php
-// namespace Design;
+namespace Model;
 
-require_once "Model/JsonBase.php";
+// require_once "Model/JsonBase.php";
 
 class MovingAverage extends JsonBase
 {

@@ -1,26 +1,42 @@
 <?php
 
+namespace Strategy;
+ 
 
-use Strategy\Strategy;
+
+use Exchange\Bittrex\BittrexHelper;
+use Exchange\Bittrex\BittrexTicker;
+use config\BittrexProperties;
+use Interfaces\Strategy;
 use Factory\OrderBookFactory;
 use Factory\OrderBooksFactory;
+use Model\JsonBase;
+use Model\JsonParser;
+use Model\Spread;
+use ModelContainer\OrderBooks;
+use Tools\Compare;
+use Utils\CoinMarketCap;
+use UtilsHelpers\MarketHistoryContainer;
 
-require_once 'config/BittrexProperties.php';
-require_once 'Exchange/Bittrex/BittrexHelper.php';
-require_once 'Exchange/Bittrex/BittrexTicker.php';
-require_once 'Factory/OrderBookFactory.php';
-require_once 'Factory/OrderBooksFactory.php';
-require_once 'Interface/Strategy.php';
-require_once "Model/JsonBase.php";
-require_once "Model/JsonParser.php";
-require_once 'Model/OrderBook.php';
-require_once 'Model/Spread.php';
-require_once 'ModelContainer/OrderBooks.php';
-require_once 'Utils/CoinMarketCap.php';
-require_once 'Utils/Logger.php';
-require_once "UtilsHelpers/MarketHistoryContainer.php";
-require_once 'Strategy/MarketMaker.php';
-require_once 'Tools/Compare.php';
+
+
+
+// require_once 'config/BittrexProperties.php';
+// require_once 'Exchange/Bittrex/BittrexHelper.php';
+// require_once 'Exchange/Bittrex/BittrexTicker.php';
+// require_once 'Factory/OrderBookFactory.php';
+// require_once 'Factory/OrderBooksFactory.php';
+// require_once 'Interfaces/Strategy.php';
+// require_once "Model/JsonBase.php";
+// require_once "Model/JsonParser.php";
+// require_once 'Model/OrderBook.php';
+// require_once 'Model/Spread.php';
+// require_once 'ModelContainer/OrderBooks.php';
+// require_once 'Utils/CoinMarketCap.php';
+// require_once 'Utils/Logger.php';
+// require_once "UtilsHelpers/MarketHistoryContainer.php";
+// require_once 'Strategy/MarketMaker.php';
+// require_once 'Tools/Compare.php';
 
 Class MarketMaker extends JsonBase implements Strategy{
     
@@ -89,7 +105,7 @@ Class MarketMaker extends JsonBase implements Strategy{
         
         
         $balance_BTC        = $bittrexHelper->getBittrexBalance($bittrexProp->getBittrexAPISecret(), $bittrexProp->getBittrexBalanceBTCURL());
-        $balance_USD        = null;
+//         $balance_USD        = null;
         foreach($coinMarketCap->getFgcData() as $data) {
             $coinMarketCap->setFgcDataQuotes($data['quote']);
 //             $coinMarketCap->setFgcDataQuotesBTC($coinMarketCap->getFgcDataQuotes()['BTC']);

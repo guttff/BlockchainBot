@@ -1,8 +1,7 @@
 <?php
 
-// namespace BittrexHelper;
+namespace Exchange\Bittrex;
 
-// use BittrexTicker;
 
 // require_once "Bittrex/BittrexTicker.php";
 

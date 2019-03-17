@@ -1,5 +1,5 @@
 <?php
-// namespace JsonBase;
+namespace Model;
 
 class JsonBase
 {

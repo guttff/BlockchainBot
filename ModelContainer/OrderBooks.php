@@ -1,10 +1,13 @@
 <?php
-use Container\Container;
+namespace ModelContainer;
+
+use Model\JsonBase;
+use Interfaces\Container;
 use Factory\OrderBookFactory;
 
-require_once 'Interface/Container.php';
-require_once 'Model/JsonBase.php';
-require_once 'Model/OrderBook.php';
+// require_once 'Interfaces/Container.php';
+// require_once 'Model/JsonBase.php';
+// require_once 'Model/OrderBook.php';
 
 class OrderBooks extends JsonBase implements Container
 {

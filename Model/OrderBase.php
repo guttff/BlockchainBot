@@ -1,9 +1,10 @@
 <?php
-// namespace Order;
+namespace Model;
 
-require_once "Model/JsonBase.php";
 
-class BaseOrder extends JsonBase
+// require_once "Model/JsonBase.php";
+
+class OrderBase extends JsonBase
 {
     public $quantity;
     public $rate;

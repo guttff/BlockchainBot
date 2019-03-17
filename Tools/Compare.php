@@ -1,5 +1,5 @@
 <?php
-// namespace Utils;
+namespace Tools;
 
 class Compare
 {

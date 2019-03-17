@@ -1,5 +1,5 @@
 <?php
-namespace Container;
+namespace Interfaces;
 
 interface Container
 {

@@ -1,10 +1,11 @@
 <?php
 
-// namespace BittrexTicker;
+namespace Exchange\Bittrex;
 
-// use JsonBase;
+use Model\JsonBase;
 
-require_once "Model/JsonBase.php";
+
+// require_once "Model/JsonBase.php";
 
 class BittrexTicker extends JsonBase
 {

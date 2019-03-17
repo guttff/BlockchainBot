@@ -1,11 +1,11 @@
 <?php
-// namespace CoinMarketCap;
+namespace Utils;
 
-// use JsonBase;
+use Model\JsonBase;
 use config\CoinMarketCapProperties;
 
-require_once "Model/JsonBase.php";
-require_once "config/CoinMarketCapProperties.php";
+// require_once "Model/JsonBase.php";
+// require_once "config/CoinMarketCapProperties.php";
 
 class CoinMarketCap extends JsonBase
 {

@@ -1,8 +1,7 @@
 <?php
-// namespace SmallestSpread;
+namespace Model;
 
-// use JsonBase;
-require_once "Model/JsonBase.php";
+// require_once "Model/JsonBase.php";
 
 
 class Spread extends JsonBase

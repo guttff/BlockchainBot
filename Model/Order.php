@@ -1,9 +1,9 @@
 <?php
-// include "BaseOrder.php";
+namespace Model;
 
-require_once "Model/BaseOrder.php";
+// require_once "Model/BaseOrder.php";
 
-class Order extends BaseOrder
+class Order extends OrderBase
 {
     
     private $market;            // BTC-XRP
