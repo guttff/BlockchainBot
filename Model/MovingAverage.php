@@ -1,6 +1,7 @@
 <?php
 namespace Model;
 
+
 // require_once "Model/JsonBase.php";
 
 class MovingAverage extends JsonBase
@@ -31,7 +32,14 @@ class MovingAverage extends JsonBase
     
     public function _construct()
     {
+        $this->marketHistory = Array();
+        $this->SimpleMovingAverage = Array();
+        $this->ExponentialMovingAverage = Array();
         
+        $this->runningTotal = 0;
+        $this->N_timePeriods = 0;
+        $this->P_currPrice = 0;
+        $this->previousEMA = 0;
     }
     
     
@@ -39,6 +47,49 @@ class MovingAverage extends JsonBase
         return get_object_vars($this);
     }
     
+    
+    
+    /*
+     * EMA = (P * a) + (previous EMA * (1-a))
+     * P = current price
+     * a = smoothing factor = 2 / (1 + N)
+     *  = number of time periods
+     * use SMA when previous EMA is unknown
+     */
+    
+    public function build(){
+        $sma = 0;
+        $ema = 0;
+        $a = 0;
+        
+        /* @var $t Trade */
+        foreach(array_reverse($this->getMarketHistory()) as $t){
+            $this->N_timePeriods += 1;
+            
+            $this->runningTotal += $t->getPrice();
+            
+            $sma = number_format($this->runningTotal/$this->N_timePeriods, 8, '.', '');
+            
+            if($this->previousEMA == null)
+                $this->previousEMA = $sma;
+            
+            $a = 2/(1 + $this->N_timePeriods);  // a = smoothing factor = 2 / (1 + N)
+            $ema = number_format(($t->getPrice() * $a) + ($this->previousEMA * (1-$a)), 8, '.', ''); // (P * a) + (previous EMA * (1-a))
+            
+            $this->previousEMA = $ema;
+            
+            echo "<br/>";
+            echo " sma : ".$sma;
+            echo "<br/>";
+            echo " ema : ".$ema;
+            echo "<br/>";
+            echo JsonParser::toJSON($t);
+            echo "<br/>";
+            echo "$this->N_timePeriods";
+            echo '---------------------------';
+            echo "<br/>";
+        }
+    }
     
     
     /**
@@ -109,7 +160,7 @@ class MovingAverage extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getN_timePeriods()
     {
@@ -117,7 +168,7 @@ class MovingAverage extends JsonBase
     }
 
     /**
-     * @param mixed $N_timePeriods
+     * @param int
      */
     public function setN_timePeriods($N_timePeriods)
     {
@@ -141,7 +192,7 @@ class MovingAverage extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return float
      */
     public function getP_currPrice()
     {
@@ -149,7 +200,7 @@ class MovingAverage extends JsonBase
     }
 
     /**
-     * @param mixed $P_currPrice
+     * @param float
      */
     public function setP_currPrice($P_currPrice)
     {
@@ -157,7 +208,7 @@ class MovingAverage extends JsonBase
     }
 
     /**
-     * @return mixed
+     * @return Trade[]
      */
     public function getMarketHistory()
     {
@@ -165,7 +216,7 @@ class MovingAverage extends JsonBase
     }
 
     /**
-     * @param mixed $marketHistory
+     * @param $marketHistory
      */
     public function setMarketHistory($marketHistory)
     {

@@ -18,6 +18,7 @@ use Model\JsonParser;
 use Model\Spread;
 use Utils\CoinMarketCap;
 use config\BittrexProperties;
+use Factory\MovingAverageFactory;
 
 
 
@@ -188,7 +189,16 @@ Class MarketMaker extends JsonBase implements Strategy{
                 
                 $marketHistories->add($mh);
                 
+                $ma = MovingAverageFactory::create();
+                $ma->setMarket($market);
+                $ma->setMarketHistory($mh->getMarketHistory());
+                $ma->build();
+                
+                
+                
                 echo "<br/>";
+                
+                
                 
                 echo "<pre>";
                 echo '$buyOrderBook Mean for market :' .$market . '<br/>';

@@ -1,7 +1,7 @@
 <?php
-namespace Exception;
+namespace Exceptions;
 
-class ExceptionWrapper
+class ExceptionMapper //extends Exception 
 {
     public static function MissingException($message){
         echo "Missing : ". $message; 

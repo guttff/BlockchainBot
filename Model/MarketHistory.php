@@ -267,7 +267,7 @@ class MarketHistory extends JsonBase
     }
     
     /**
-     * @return $marketHistory:
+     * @return Trade[]
      */
     public function getMarketHistory()
     {
