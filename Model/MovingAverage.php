@@ -26,6 +26,7 @@ class MovingAverage extends JsonBase
     private $N_timePeriods;
     private $a_smoothingfactor;
     private $P_currPrice;
+    /** @var Trade[] */
     private $marketHistory;
     private $runningTotal;
     private $movingAverage;
@@ -62,6 +63,10 @@ class MovingAverage extends JsonBase
         $ema = 0;
         $a = 0;
         
+        echo '---------------------------------------------------------------------------------';
+        echo $this->getMarket();
+        echo '---------------------------------------------------------------------------------';
+        
         /* @var $t Trade */
         foreach(array_reverse($this->getMarketHistory()) as $t){
             $this->N_timePeriods += 1;
@@ -86,7 +91,6 @@ class MovingAverage extends JsonBase
             echo JsonParser::toJSON($t);
             echo "<br/>";
             echo "$this->N_timePeriods";
-            echo '---------------------------';
             echo "<br/>";
         }
     }

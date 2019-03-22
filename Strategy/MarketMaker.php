@@ -201,11 +201,14 @@ Class MarketMaker extends JsonBase implements Strategy{
                 
                 
                 echo "<pre>";
-                echo '$buyOrderBook Mean for market :' .$market . '<br/>';
-                echo $ob->getOrderBookMean()->toJSON();
+                echo '$buyOrderBook Maximum for market :' .$market . '<br/>';
+                echo $ob->getOrderBookMaximum()->toJSON();
                 echo "<br/>";
                 echo '$buyOrderBook median for market :' .$market . '<br/>';
                 echo $ob->getOrderBookMedian()->toJSON();
+                echo "<br/>";
+                echo '$buyOrderBook Minimum for market :' .$market . '<br/>';
+                echo $ob->getOrderBookMinimum()->toJSON();
                 echo "<br/>";
                 
 //                 echo var_dump($marketHistoryContainer->getMarketHistory());
