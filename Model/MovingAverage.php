@@ -82,16 +82,18 @@ class MovingAverage extends JsonBase
             $ema = number_format(($t->getPrice() * $a) + ($this->previousEMA * (1-$a)), 8, '.', ''); // (P * a) + (previous EMA * (1-a))
             
             $this->previousEMA = $ema;
-            
-            echo "<br/>";
-            echo " sma : ".$sma;
-            echo "<br/>";
-            echo " ema : ".$ema;
-            echo "<br/>";
-            echo JsonParser::toJSON($t);
-            echo "<br/>";
-            echo "$this->N_timePeriods";
-            echo "<br/>";
+            if($this->N_timePeriods >= 75){
+                
+                echo "<br/>";
+                echo " sma : ".$sma;
+                echo "<br/>";
+                echo " ema : ".$ema;
+                echo "<br/>";
+                echo JsonParser::toJSON($t);
+                echo "<br/>";
+                echo "$this->N_timePeriods";
+                echo "<br/>";
+            }
         }
     }
     
